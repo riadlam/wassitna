@@ -1,0 +1,3326 @@
+/* Escrow logged-in webapp shell (transactions) */
+
+.appShell {
+    --app-sidebar: 256px;
+    --app-green: #3cb95d;
+    --app-green-hover: #34a552;
+    --app-fg: #1b2430;
+    --app-muted: #5b6570;
+    --app-line: #e6ebef;
+    --app-bg: #f7f9fb;
+    --app-selected: #eef8ea;
+    min-height: 100vh;
+    background: #fff;
+    color: var(--app-fg);
+    font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.appShell-page {
+    display: flex;
+    min-height: 100vh;
+}
+
+.appSidebar {
+    width: var(--app-sidebar);
+    flex: 0 0 var(--app-sidebar);
+    border-right: 1px solid var(--app-line);
+    padding: 24px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.appSidebar-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    text-decoration: none;
+}
+
+.appSidebar-logo .logo-name {
+    color: #01426a;
+    font-size: 22px;
+}
+
+.appSidebar-logo .logo-primary {
+    color: #01426a;
+    fill: #01426a;
+}
+
+.appSidebar-logo .logo-secondary {
+    color: #3cb95d;
+    fill: #3cb95d;
+}
+
+.appAvatar .logo-primary,
+.appAvatar .logo-text--primary {
+    fill: #01426a;
+}
+
+.appAvatar .logo-secondary,
+.appAvatar .logo-text--secondary {
+    fill: #3cb95d;
+}
+
+.appSidebar-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 20px;
+    padding: 0 14px;
+    border-radius: 8px;
+    background: var(--app-green);
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+.appSidebar-cta:hover {
+    background: var(--app-green-hover);
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+.appSidebar-cta svg {
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+}
+
+.appSidebar-wallet {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 0 16px;
+    padding: 12px 12px 11px;
+    border: 1px solid var(--app-line);
+    border-radius: 8px;
+    background: var(--app-selected);
+}
+
+.appSidebar-wallet span {
+    color: var(--app-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.appSidebar-wallet strong {
+    color: var(--app-fg);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.txHeader-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--app-green);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.txHeader-cta:hover {
+    background: var(--app-green-hover);
+}
+
+.txHeader-cta svg {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+}
+
+.txEmpty-cta[type='button'] {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.appSidebar .TopNavigation {
+    display: flex;
+    flex-direction: column;
+}
+
+.appSidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.appSidebar-nav--bottom {
+    margin-top: auto;
+    padding-top: 16px;
+}
+
+.appSidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: var(--app-fg);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.appSidebar-item:hover {
+    background: var(--app-bg);
+    color: var(--app-fg);
+    text-decoration: none;
+}
+
+.appSidebar-item.is-selected {
+    background: var(--app-selected);
+    color: var(--app-fg);
+    font-weight: 600;
+}
+
+.appSidebar-item svg {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.appSidebar-item.is-selected svg {
+    fill: var(--app-green);
+}
+
+.appMain {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.appTopbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 56px;
+    padding: 0 24px;
+}
+
+.appAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f6f8;
+    overflow: hidden;
+}
+
+.appAvatar svg {
+    width: 22px;
+    height: 28px;
+}
+
+.appContent {
+    padding: 8px 32px 48px;
+}
+
+.appContent-title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--app-fg);
+}
+
+.txPageHead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 18px;
+}
+
+.txHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.txFilterBar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.txSearch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 240px;
+    max-width: 420px;
+    flex: 1 1 260px;
+    height: 40px;
+    padding: 0 14px;
+    border: 1px solid #d5dde3;
+    border-radius: 10px;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.txSearch:focus-within {
+    border-color: var(--app-green);
+    box-shadow: 0 0 0 3px rgba(60, 185, 93, 0.16);
+}
+
+.txSearch input {
+    border: 0;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    background: transparent;
+    color: var(--app-fg);
+}
+
+.txSearch svg {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: #6b7580;
+}
+
+.txFilters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.txStatusFilter {
+    position: relative;
+}
+
+.txFilterBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d5dde3;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--app-fg);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.txFilterBtn:hover,
+.txFilterBtn.is-open {
+    border-color: #b7c2cc;
+    background: #f7f9fb;
+}
+
+.txFilterBtn.is-active {
+    border-color: #b7e0c2;
+    background: var(--app-selected);
+}
+
+.txFilterBtn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.txStatusMenu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 20;
+    min-width: 220px;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #d6dbe3;
+    border-radius: 10px;
+    box-shadow: 0 12px 28px rgba(16, 24, 40, 0.12);
+}
+
+.txStatusMenu-item {
+    display: block;
+    width: 100%;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--app-fg);
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.txStatusMenu-item:hover {
+    background: #f3f6f9;
+}
+
+.txStatusMenu-item.is-active {
+    background: var(--app-selected);
+    font-weight: 600;
+}
+
+.txCount {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--app-muted);
+}
+
+.txTableWrap {
+    border: 1px solid var(--app-line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.04);
+}
+
+.txTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.txTable th,
+.txTable td {
+    padding: 14px 16px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.txTable th {
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+    border-bottom: 1px solid var(--app-line);
+    background: #f7f9fb;
+    white-space: nowrap;
+}
+
+.txTable td {
+    font-size: 14px;
+    color: var(--app-fg);
+    border-bottom: 1px solid #eef2f5;
+}
+
+.txTable tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.txTable tbody tr {
+    transition: background 0.15s ease;
+}
+
+.txTable tbody tr:hover {
+    background: #f6faf7;
+}
+
+.txTable tbody tr.is-clickable {
+    cursor: pointer;
+}
+
+.txTable th.is-right,
+.txTable td.is-right {
+    text-align: right;
+}
+
+.txSort {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+}
+
+.txSort svg {
+    opacity: 0.35;
+}
+
+.txSort.is-asc svg,
+.txSort.is-desc svg {
+    opacity: 1;
+    fill: var(--app-green);
+}
+
+.txMono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: #5b6570;
+    background: #f3f6f8;
+    border-radius: 6px;
+    padding: 3px 7px;
+}
+
+.txMuted {
+    color: var(--app-muted);
+    white-space: nowrap;
+}
+
+.txTitleLink {
+    color: #01426a;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.txTitleLink:hover {
+    text-decoration: underline;
+}
+
+.txAmount {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.txRole {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 8px;
+    border-radius: 999px;
+    background: #f3f6f8;
+    color: #3d4a57;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.txBadge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.txBadge--pending_acceptance,
+.txBadge--pending {
+    background: #fff7e8;
+    color: #9a6700;
+}
+
+.txBadge--awaiting_payment {
+    background: #eef4ff;
+    color: #175cd3;
+}
+
+.txBadge--awaiting_delivery {
+    background: #eef8ea;
+    color: #237a38;
+}
+
+.txBadge--awaiting_inspection {
+    background: #f4f0ff;
+    color: #6941c6;
+}
+
+.txBadge--completed,
+.txBadge--paid {
+    background: #e7f8ed;
+    color: #17663a;
+}
+
+.txBadge--cancelled,
+.txBadge--default {
+    background: #f3f6f8;
+    color: #5b6570;
+}
+
+.txBadge--disputed,
+.txBadge--rejected {
+    background: #fdecec;
+    color: #b42318;
+}
+
+.txSkel-bar {
+    display: block;
+    height: 12px;
+    width: 72px;
+    max-width: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #eef2f5 0%, #f7f9fb 45%, #eef2f5 100%);
+    background-size: 200% 100%;
+    animation: txListSkel 1.2s ease-in-out infinite;
+}
+
+.txSkel-bar.is-wide {
+    width: 180px;
+}
+
+@keyframes txListSkel {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+.txEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 56px 20px;
+}
+
+.txEmpty img,
+.txEmpty svg.txEmpty-art {
+    width: 112px;
+    height: 112px;
+    margin-bottom: 16px;
+}
+
+.txEmpty p {
+    margin: 0 0 16px;
+    max-width: 360px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--app-muted);
+}
+
+.txEmpty-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 18px;
+    border-radius: 8px;
+    background: var(--app-green);
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+.txEmpty-cta:hover {
+    background: var(--app-green-hover);
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+/* Start transaction (headerV3 + MUI-style form) */
+.startTransactionPage {
+    min-height: 100vh;
+    background: #f5f7f9;
+}
+
+.startTransactionPage .MuiDivider-root {
+    border: 0;
+    height: 1px;
+    margin: 0 0 8px;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.startTransactionPage .MuiFormControl-root {
+    position: relative;
+    width: 100%;
+    margin: 16px 0 4px;
+}
+
+.startTransactionPage .MuiFormControl-root.is-open {
+    z-index: 30;
+}
+
+.startTransactionPage .MuiInputLabel-root {
+    position: absolute;
+    top: 16px;
+    left: 14px;
+    z-index: 2;
+    pointer-events: none;
+    font-size: 16px;
+    line-height: 1.4;
+    color: rgba(0, 0, 0, 0.6);
+    background: transparent;
+    transform-origin: top left;
+    transition: transform 0.15s ease, color 0.15s ease, top 0.15s ease;
+}
+
+.startTransactionPage .MuiInputLabel-shrink,
+.startTransactionPage .is-shrink .MuiInputLabel-root {
+    top: -7px;
+    left: 10px;
+    padding: 0 4px;
+    font-size: 12px;
+    background: #fff;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.startTransactionPage .is-focused .MuiInputLabel-root {
+    color: #01426a;
+}
+
+.startTransactionPage .Mui-error.MuiInputLabel-root,
+.startTransactionPage .is-error .MuiInputLabel-root {
+    color: #d32f2f;
+}
+
+.startTransactionPage .MuiInputBase-root {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 56px;
+    box-sizing: border-box;
+}
+
+.startTransactionPage .MuiInputBase-input,
+.startTransactionPage .MuiSelect-select {
+    width: 100%;
+    min-height: 56px;
+    padding: 16px 14px;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: #1b2430;
+    font: inherit;
+    font-size: 16px;
+    appearance: none;
+    box-sizing: border-box;
+}
+
+.startTransactionPage .MuiInputBase-multiline {
+    align-items: stretch;
+}
+
+.startTransactionPage .MuiInputBase-inputMultiline {
+    min-height: 56px;
+    resize: vertical;
+    line-height: 1.4;
+}
+
+.startTransactionPage .MuiInputBase-adornedStart {
+    padding-left: 14px;
+}
+
+.startTransactionPage .MuiInputAdornment-root {
+    color: #1b2430;
+    font-size: 16px;
+    margin-right: 4px;
+}
+
+.startTransactionPage .MuiInputBase-adornedStart .MuiInputBase-input {
+    padding-left: 0;
+}
+
+.startTransactionPage .MuiSelect-select {
+    text-align: left;
+    cursor: pointer;
+}
+
+.startTransactionPage .MuiSelect-icon {
+    position: absolute;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    fill: rgba(0, 0, 0, 0.54);
+    pointer-events: none;
+    transition: transform 0.15s ease;
+}
+
+.startTransactionPage .MuiSelect-icon.is-open {
+    transform: rotate(180deg);
+}
+
+.startTransactionPage .MuiMenu-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 40;
+    margin: 0;
+    padding: 8px 0;
+    list-style: none;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    max-height: 280px;
+    overflow: auto;
+}
+
+.startTransactionPage .MuiMenuItem-root {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    border: 0;
+    background: transparent;
+    color: #1b2430;
+    font: inherit;
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: left;
+    cursor: pointer;
+}
+
+.startTransactionPage .MuiMenuItem-root:hover,
+.startTransactionPage .MuiMenuItem-root.is-selected {
+    background: rgba(60, 185, 93, 0.12);
+}
+
+.startTransactionPage .MuiOutlinedInput-notchedOutline {
+    position: absolute;
+    inset: -5px 0 0;
+    margin: 0;
+    padding: 0 8px;
+    pointer-events: none;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px;
+    min-width: 0;
+}
+
+.startTransactionPage .MuiOutlinedInput-notchedOutline legend {
+    float: none;
+    width: auto;
+    max-width: 0.01px;
+    padding: 0;
+    height: 11px;
+    font-size: 12px;
+    visibility: hidden;
+}
+
+.startTransactionPage .MuiOutlinedInput-notchedOutline legend.is-notched,
+.startTransactionPage .is-shrink .MuiOutlinedInput-notchedOutline legend {
+    max-width: 100%;
+    padding: 0 4px;
+}
+
+.startTransactionPage .is-focused .MuiOutlinedInput-notchedOutline {
+    border-width: 2px;
+    border-color: #01426a;
+}
+
+.startTransactionPage .is-error .MuiOutlinedInput-notchedOutline {
+    border-color: #d32f2f;
+}
+
+.startTransactionPage .MuiFormHelperText-root {
+    min-height: 20px;
+    margin: 3px 14px 0;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.startTransactionPage .MuiFormHelperText-root.Mui-error {
+    color: #d32f2f;
+}
+
+.startTransactionPage .MuiAutocomplete-root {
+    position: relative;
+}
+
+.startTransactionPage .MuiAutocomplete-listbox {
+    position: absolute;
+    top: calc(100% - 8px);
+    left: 0;
+    right: 0;
+    z-index: 8;
+    max-height: 240px;
+    overflow: auto;
+    margin: 0;
+    padding: 8px 0;
+    list-style: none;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.startTransactionPage .MuiAutocomplete-listbox li {
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.startTransactionPage .MuiAutocomplete-listbox li:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.startTransactionPage .createTransaction-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.startTransactionPage .createTransaction-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 14px;
+    color: #1b2430;
+}
+
+.startTransactionPage .MuiButton-containedPrimary {
+    min-width: 120px;
+    min-height: 42px;
+    padding: 8px 22px;
+    border: 0;
+    border-radius: 4px;
+    background: #01426a;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.startTransactionPage .MuiButton-containedPrimary:hover:not(:disabled) {
+    background: #013557;
+}
+
+.startTransactionPage .MuiButton-containedPrimary:disabled {
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.26);
+    cursor: default;
+}
+
+@media (max-width: 679px) {
+    .startTransactionPage .MuiButton-containedPrimary {
+        width: 100%;
+    }
+}
+
+.startTransactionPage .materialUI-border {
+    position: relative;
+}
+
+.startTransactionPage .materialUI-box-edit-backdrop {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.startTransactionPage .materialUI-border:hover .materialUI-box-edit-backdrop,
+.startTransactionPage .materialUI-border:focus-within .materialUI-box-edit-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.startTransactionPage .materialUI-box-edit-icon {
+    display: block;
+    color: #fff;
+    fill: #fff;
+}
+
+.startTransactionPage .materialUI-box-edit-text {
+    margin-top: 10px;
+    margin-left: 0;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+@media (max-width: 679px) {
+    .startTransactionPage .materialUI-box-edit-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+        background-color: transparent;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding: 8px;
+    }
+
+    .startTransactionPage .materialUI-box-edit-icon {
+        display: none;
+    }
+
+    .startTransactionPage .materialUI-box-edit-text {
+        margin: 0;
+        color: #3cb95d;
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+.startTransactionPage .createTransaction-summary-header-anchor {
+    color: #08f;
+    font-size: 14px;
+}
+
+.startTransactionPage .feePayerSelect {
+    min-height: 0;
+    display: inline-flex;
+    width: auto;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+}
+
+.startTransactionPage .feePayerSelect .MuiInputBase-input,
+.startTransactionPage .feePayerSelect .MuiSelect-select {
+    min-height: 0;
+    width: auto;
+    padding: 2px 22px 2px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #3cb95d;
+    cursor: pointer;
+}
+
+.startTransactionPage .feePayerSelect .MuiSelect-icon {
+    right: 0;
+    fill: #3cb95d;
+}
+
+.startTransactionPage .createTransaction-check-row-header {
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.startTransactionPage .MuiFormControlLabel-root {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    max-width: 640px;
+}
+
+.startTransactionPage .MuiFormControlLabel-label {
+    padding-top: 0;
+    margin: 0;
+}
+
+.startTransactionPage .MuiCheckbox-root {
+    position: relative;
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    margin-top: 0;
+    align-items: center;
+    justify-content: center;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.startTransactionPage .MuiCheckbox-root svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.startTransactionPage .MuiCheckbox-root.Mui-checked {
+    color: #01426a;
+}
+
+.startTransactionPage .PrivateSwitchBase-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.startTransactionPage .createTransaction-default-text {
+    display: block;
+    font-size: 16px;
+    line-height: 24px;
+    color: #1b2430;
+}
+
+.startTransactionPage .createTransaction-default-text a {
+    color: #08f;
+}
+
+.startTransactionPage .createTransaction-fee-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 24px;
+}
+
+.app-fee-page {
+    position: relative;
+}
+
+.appFee-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin: 0 0 28px;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--app-fg);
+}
+
+.appFee-hero-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+}
+
+.appFee-kicker {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+}
+
+.appFee-hero .appContent-title {
+    margin: 0 0 10px;
+    color: var(--app-fg);
+    font-size: 28px;
+}
+
+.appFee-lead {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--app-muted);
+}
+
+.app-fee-page .feeCalculator-wrap--app {
+    max-width: 980px;
+    gap: 20px;
+}
+
+.app-fee-page .feeCalculator-card--panel,
+.app-fee-page .feeCalculator-schedule--tiers {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(1, 66, 106, 0.08);
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), #fff),
+        linear-gradient(135deg, #eef8ea, #f5f7f9);
+    box-shadow: 0 10px 28px rgba(16, 24, 40, 0.06);
+    padding: 0;
+}
+
+.app-fee-page .feeCalculator-card--panel::before,
+.app-fee-page .feeCalculator-schedule--tiers::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3cb95d, #01426a);
+}
+
+.feeCalculator-panelHead {
+    padding: 22px 24px 0;
+}
+
+.feeCalculator-panelHead h2 {
+    margin: 0 0 6px;
+    font-family: Montserrat, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #01426a;
+}
+
+.feeCalculator-panelHead p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--app-muted);
+}
+
+.feeCalculator-form {
+    padding: 20px 24px 8px;
+}
+
+.feeCalculator-amount {
+    display: block;
+}
+
+.feeCalculator-amount-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--app-muted);
+}
+
+.feeCalculator-amount-field {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    border: 1px solid #d5dde3;
+    border-radius: 12px;
+    background:
+        linear-gradient(180deg, #fff, #f8fafb);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.feeCalculator-amount-field:focus-within {
+    border-color: #01426a;
+    box-shadow: 0 0 0 3px rgba(1, 66, 106, 0.12);
+}
+
+.feeCalculator-amount-prefix {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+    height: 100%;
+    padding: 0 12px;
+    background: linear-gradient(180deg, #eef8ea, #e4f3df);
+    color: #217f2d;
+    font-weight: 700;
+    font-size: 14px;
+    border-right: 1px solid #d7e8d2;
+}
+
+.feeCalculator-amount-field input {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    outline: none;
+    background: transparent;
+    padding: 0 16px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--app-fg);
+    font-variant-numeric: tabular-nums;
+}
+
+.feeCalculator-meter {
+    margin: 18px 0 20px;
+}
+
+.feeCalculator-meter-track {
+    height: 8px;
+    border-radius: 999px;
+    background: #e8eef2;
+    overflow: hidden;
+}
+
+.feeCalculator-meter-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #3cb95d, #01426a);
+    transition: width 0.35s ease;
+}
+
+.feeCalculator-meter-marks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--app-muted);
+}
+
+.feeCalculator-submitBtn,
+.feeCalculator-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #45c568, #3cb95d);
+    color: #fff !important;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none !important;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(60, 185, 93, 0.28);
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.feeCalculator-submitBtn:hover,
+.feeCalculator-cta:hover {
+    background: linear-gradient(180deg, #3cb95d, #34a552);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(60, 185, 93, 0.34);
+}
+
+.feeCalculator-placeholder {
+    margin: 8px 24px 24px;
+    padding: 22px 18px;
+    border-radius: 12px;
+    border: 1px dashed #cfd8df;
+    background:
+        repeating-linear-gradient(
+            -45deg,
+            rgba(1, 66, 106, 0.02),
+            rgba(1, 66, 106, 0.02) 8px,
+            rgba(60, 185, 93, 0.03) 8px,
+            rgba(60, 185, 93, 0.03) 16px
+        );
+    text-align: center;
+}
+
+.feeCalculator-placeholder p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--app-muted);
+}
+
+.app-fee-page .feeCalculator-result {
+    position: relative;
+    margin: 8px 24px 24px;
+    padding: 22px 20px 20px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(60, 185, 93, 0.2);
+    background: linear-gradient(160deg, #f4fbf2 0%, #fff 48%, #f5f9fc 100%);
+    animation: appFee-reveal 0.35s ease;
+}
+
+.app-fee-page .feeCalculator-result.tier-free {
+    border-color: rgba(60, 185, 93, 0.35);
+}
+
+.feeCalculator-result-glow {
+    position: absolute;
+    top: -40px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(60, 185, 93, 0.22), transparent 70%);
+    pointer-events: none;
+}
+
+.feeCalculator-result-label {
+    position: relative;
+    margin: 0 0 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--app-muted);
+}
+
+.feeCalculator-result-total {
+    position: relative;
+    margin: 0 0 16px;
+    font-family: Montserrat, Helvetica, Arial, sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #01426a;
+}
+
+.feeCalculator-result-meta {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.feeCalculator-result-meta div {
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(1, 66, 106, 0.08);
+}
+
+.feeCalculator-result-meta span {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: var(--app-muted);
+}
+
+.feeCalculator-result-meta strong {
+    font-size: 15px;
+    color: var(--app-fg);
+}
+
+.app-fee-page .feeCalculator-note {
+    position: relative;
+    margin: 0 0 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--app-muted);
+}
+
+.app-fee-page .feeCalculator-note--warn {
+    color: #9a5b00;
+}
+
+@keyframes appFee-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.app-fee-page .feeCalculator-schedule--tiers {
+    padding-bottom: 12px;
+}
+
+.app-fee-page .feeCalculator-schedule--tiers ul {
+    list-style: none;
+    margin: 0;
+    padding: 16px 16px 8px;
+}
+
+.feeTier {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 10px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(1, 66, 106, 0.08);
+    background: linear-gradient(135deg, #fff, #f7faf8);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.feeTier:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(16, 24, 40, 0.08);
+}
+
+.feeTier-index {
+    flex: 0 0 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #01426a;
+    background: #eef4f8;
+}
+
+.feeTier--0 .feeTier-index {
+    background: #eef8ea;
+    color: #217f2d;
+}
+
+.feeTier--1 .feeTier-index {
+    background: #e7f2ea;
+    color: #2f7d46;
+}
+
+.feeTier--2 .feeTier-index {
+    background: #e8eef5;
+    color: #01426a;
+}
+
+.feeTier--3 .feeTier-index {
+    background: #f3f0e8;
+    color: #7a5b1e;
+}
+
+.feeTier-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.feeTier-body span {
+    font-size: 13px;
+    color: var(--app-muted);
+}
+
+.feeTier-body strong {
+    font-size: 16px;
+    color: var(--app-fg);
+}
+
+@media (max-width: 860px) {
+    .appFee-hero {
+        padding: 0;
+    }
+
+    .feeCalculator-result-total {
+        font-size: 28px;
+    }
+}
+
+.startTransactionPage .phoneField {
+    position: relative;
+    margin-top: 16px;
+}
+
+.startTransactionPage .phoneField-label {
+    position: absolute;
+    top: -7px;
+    left: 10px;
+    z-index: 2;
+    padding: 0 4px;
+    background: #fff;
+    font-size: 12px;
+    line-height: 1.2;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.startTransactionPage .phoneField.is-focused .phoneField-label {
+    color: #01426a;
+}
+
+.startTransactionPage .phoneField .react-international-phone-input-container {
+    width: 100%;
+    height: 56px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px;
+    overflow: visible;
+}
+
+.startTransactionPage .phoneField.is-focused .react-international-phone-input-container {
+    border-width: 2px;
+    border-color: #01426a;
+}
+
+.startTransactionPage .phoneField .react-international-phone-country-selector-button,
+.startTransactionPage .phoneField .react-international-phone-input-container .react-international-phone-input {
+    height: 54px !important;
+    border: 0 !important;
+    background: transparent;
+    box-shadow: none;
+}
+
+.startTransactionPage .phoneField .react-international-phone-country-selector-button {
+    width: 62px;
+    padding: 0 8px;
+}
+
+.startTransactionPage .phoneField .react-international-phone-country-selector-button:hover {
+    background: #f5f7f9;
+}
+
+.startTransactionPage .phoneField .react-international-phone-input-container .react-international-phone-input {
+    flex: 1;
+    width: 100% !important;
+    padding: 0 14px 0 8px;
+    font-size: 16px;
+    color: #1b2430;
+}
+
+.startTransactionPage .phoneField .react-international-phone-country-selector-dropdown {
+    top: 58px;
+    z-index: 20;
+    width: min(360px, 90vw);
+    max-height: 280px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.16);
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.startTransactionPage .phoneField .react-international-phone-country-selector-dropdown__list-item {
+    min-height: 40px;
+    padding: 8px 12px;
+    gap: 4px;
+}
+
+.startTransactionPage .phoneField .react-international-phone-country-selector-dropdown__list-item-country-name,
+.startTransactionPage .phoneField .react-international-phone-country-selector-dropdown__list-item-dial-code {
+    font-size: 14px;
+}
+
+@media (max-width: 860px) {
+    .appShell-page {
+        flex-direction: column;
+    }
+
+    .appSidebar {
+        width: 100%;
+        flex-basis: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--app-line);
+        padding: 16px;
+    }
+
+    .appSidebar-nav--bottom {
+        display: none;
+    }
+
+    .appContent {
+        padding: 16px;
+    }
+
+    .txTableWrap {
+        overflow-x: auto;
+    }
+
+    .txPageHead {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .txTable th,
+    .txTable td {
+        padding: 12px 12px;
+    }
+}
+
+/* Transaction detail — Escrow-style paper / tags / stepper texture */
+.transactionDetailPage {
+    --tx-ink: #01426a;
+    --tx-body: #4f4f4f;
+    --tx-muted: #828282;
+    --tx-line: rgba(0, 0, 0, 0.12);
+    --tx-paper: #ffffff;
+    --tx-canvas: #f3f5f7;
+    --tx-green: #3cb95d;
+    background:
+        linear-gradient(180deg, #eef3f6 0%, var(--tx-canvas) 180px, var(--tx-canvas) 100%);
+    min-height: 100vh;
+    color: var(--tx-body);
+    font-family: Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.transactionDetailPage .txDetail-loading {
+    max-width: 1120px;
+    margin: 48px auto;
+    padding: 0 24px;
+    color: var(--tx-muted);
+}
+
+.transactionDetailPage .txSkel {
+    display: block;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #eef1f4 0%, #f7f8fa 45%, #eef1f4 100%);
+    background-size: 220% 100%;
+    animation: txSkel 1.2s ease-in-out infinite;
+}
+
+.transactionDetailPage .txSkel--title {
+    width: 58%;
+    height: 22px;
+    margin-bottom: 12px;
+}
+
+.transactionDetailPage .txSkel--id {
+    width: 42%;
+    height: 12px;
+    margin-bottom: 16px;
+}
+
+.transactionDetailPage .txSkel--line {
+    width: 100%;
+    height: 10px;
+    margin-bottom: 8px;
+}
+
+.transactionDetailPage .txSkel--mid {
+    width: 72%;
+}
+
+.transactionDetailPage .txSkel--short {
+    width: 46%;
+}
+
+.transactionDetailPage .txSkel-row {
+    margin: 16px 0 22px;
+}
+
+.transactionDetailPage .txSkel--chip {
+    width: 118px;
+    height: 22px;
+    border-radius: 11px;
+}
+
+.transactionDetailPage .txSkel-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 8px 0 22px;
+}
+
+.transactionDetailPage .txSkel--step {
+    height: 36px;
+}
+
+.transactionDetailPage .txSkel--panel {
+    height: 88px;
+}
+
+.transactionDetailPage .txSkel--label {
+    width: 36%;
+    height: 12px;
+    margin-bottom: 14px;
+}
+
+@keyframes txSkel {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+
+.transactionDetailPage .txDetail {
+    padding: 28px 0 72px;
+}
+
+.transactionDetailPage .txDetail-grid.section-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+    gap: 24px;
+    align-items: start;
+    max-width: 1120px;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.transactionDetailPage .txDetail-demoNote {
+    grid-column: 1 / -1;
+    padding: 12px 16px;
+    border-radius: 4px;
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    color: #7a5b00;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.transactionDetailPage .txDetail-main,
+.transactionDetailPage .txDetail-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.transactionDetailPage .txDetail-card {
+    background: var(--tx-paper);
+    border: 1px solid var(--tx-line);
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(1, 66, 106, 0.04);
+}
+
+.transactionDetailPage .txDetail-card--primary {
+    padding: 28px 28px 24px;
+}
+
+.transactionDetailPage .txDetail-upsell {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    border-radius: 4px;
+    border: 1px solid #81c784;
+    background: #f1f8f2;
+    color: var(--tx-body);
+    box-shadow: none;
+}
+
+.transactionDetailPage .txDetail-upsell-icon {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+
+.transactionDetailPage .txDetail-upsell-title {
+    font-weight: 700;
+    margin: 0 0 6px;
+    color: #1b5e20;
+    font-size: 15px;
+}
+
+.transactionDetailPage .txDetail-upsell p {
+    margin: 0 0 6px;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.transactionDetailPage .txDetail-upsell a {
+    color: #1565c0;
+    text-decoration: underline;
+}
+
+.transactionDetailPage .txDetail-title {
+    margin: 0 0 10px;
+    font-size: 28px;
+    line-height: 1.25;
+    color: var(--tx-ink);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    word-break: break-word;
+}
+
+.transactionDetailPage .txDetail-idRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    color: var(--tx-muted);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.transactionDetailPage .txDetail-idRow p {
+    margin: 0;
+}
+
+.transactionDetailPage .txDetail-copyBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--tx-muted);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.transactionDetailPage .txDetail-copyBtn:hover {
+    background: rgba(1, 66, 106, 0.06);
+    color: var(--tx-ink);
+}
+
+.transactionDetailPage .txDetail-copied {
+    font-size: 12px;
+    color: var(--tx-green);
+    font-weight: 500;
+}
+
+.transactionDetailPage .txDetail-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.transactionDetailPage .txDetail-blurb {
+    margin: 0;
+    color: var(--tx-body);
+    line-height: 1.55;
+    font-size: 15px;
+}
+
+.transactionDetailPage .txDetail-blurb strong {
+    color: #333;
+    font-weight: 700;
+}
+
+.transactionDetailPage .txDetail-blurb a {
+    color: #1565c0;
+    text-decoration: underline;
+    overflow-wrap: anywhere;
+}
+
+.transactionDetailPage .transactions-tags-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 18px 0 22px;
+    padding-right: 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.transactionDetailPage .transactions-tags-item {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0.35rem 1.1rem;
+    border-radius: 1.5rem;
+    background-color: #ebebeb;
+    color: #4f4f4f;
+    line-height: 1.3;
+}
+
+.transactionDetailPage .transactions-tags-item::before {
+    content: '';
+    background-color: currentColor;
+    border-radius: 50%;
+    display: inline-block;
+    height: 6px;
+    width: 6px;
+    margin-right: 0.8rem;
+    flex: 0 0 auto;
+}
+
+.transactionDetailPage .transactions-tags-item--left {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.transactionDetailPage .transactions-tags-item--awaiting {
+    background-color: #fff1a8;
+    color: #677702;
+}
+
+.transactionDetailPage .transactions-tags-item--ongoing {
+    background-color: #cdffcd;
+    color: #007f00;
+}
+
+.transactionDetailPage .transactions-tags-item--completed {
+    background-color: #e6e6f2;
+    color: #4a4aff;
+}
+
+.transactionDetailPage .transactions-tags-item--cancelledled,
+.transactionDetailPage .transactions-tags-item--disputed,
+.transactionDetailPage .transactions-tags-item--action {
+    background-color: #ffe0e0;
+    color: #d30000;
+}
+
+.transactionDetailPage .txDetail-stepper {
+    list-style: none;
+    margin: 4px 0 28px;
+    padding: 12px 4px 4px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+}
+
+.transactionDetailPage .txDetail-step {
+    position: relative;
+    text-align: center;
+    color: #9e9e9e;
+    min-width: 0;
+}
+
+.transactionDetailPage .txDetail-step-line {
+    position: absolute;
+    top: 18px;
+    right: calc(50% + 20px);
+    left: calc(-50% + 20px);
+    height: 2px;
+    background: #e0e0e0;
+    z-index: 0;
+}
+
+.transactionDetailPage .txDetail-step.is-done .txDetail-step-line,
+.transactionDetailPage .txDetail-step.is-active .txDetail-step-line {
+    background: var(--tx-green);
+}
+
+.transactionDetailPage .txDetail-step-icon {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 14px;
+    background: #eeeeee;
+    color: #757575;
+    border: 2px solid transparent;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+.transactionDetailPage .txDetail-step.is-active .txDetail-step-icon {
+    background: var(--tx-green);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(60, 185, 93, 0.18);
+}
+
+.transactionDetailPage .txDetail-step.is-done .txDetail-step-icon {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-color: #a5d6a7;
+}
+
+.transactionDetailPage .txDetail-step-label {
+    font-size: 13px;
+    line-height: 1.25;
+    padding: 0 4px;
+}
+
+.transactionDetailPage .txDetail-step.is-active .txDetail-step-label {
+    color: var(--tx-ink);
+    font-weight: 600;
+}
+
+.transactionDetailPage .txNextStep {
+    margin: 0 0 16px;
+    padding: 0 0 14px;
+    border: 0;
+    border-bottom: 1px solid #eee;
+    background: transparent;
+}
+
+.transactionDetailPage .txNextStep-title {
+    margin: 0 0 4px;
+    color: var(--tx-ink);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.transactionDetailPage .txNextStep-text {
+    margin: 0 0 8px;
+    color: var(--tx-body);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.transactionDetailPage .txNextStep-text a {
+    color: #1565c0;
+}
+
+.transactionDetailPage .txActionPanel {
+    border: 1px solid var(--tx-line);
+    border-radius: 4px;
+    padding: 16px 18px;
+    background: #fff;
+}
+
+.transactionDetailPage .txActionPanel--quiet {
+    background: #fafafa;
+}
+
+.transactionDetailPage .txActionPanel-title {
+    margin: 0 0 4px;
+    color: var(--tx-ink);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.transactionDetailPage .txActionPanel-text {
+    margin: 0 0 14px;
+    color: var(--tx-body);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.transactionDetailPage .txActionPanel-error {
+    margin: 0 0 10px;
+    color: #d30000;
+    font-size: 13px;
+}
+
+.transactionDetailPage .txActionPanel-note {
+    margin: 0 0 10px;
+    color: var(--tx-ink);
+    font-size: 13px;
+}
+
+.transactionDetailPage .txActionPanel-btn {
+    appearance: none;
+    border: 0;
+    border-radius: 4px;
+    background: var(--tx-green);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    cursor: pointer;
+}
+
+.transactionDetailPage .txActionPanel-btn:hover:not(:disabled) {
+    background: #34a552;
+}
+
+.transactionDetailPage .txActionPanel-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.transactionDetailPage .txActionPanel-btn--ghost {
+    background: #fff;
+    color: var(--tx-ink);
+    border: 1px solid var(--tx-line);
+}
+
+.transactionDetailPage .txActionPanel-btn--ghost:hover:not(:disabled) {
+    background: #f5f7f9;
+}
+
+.transactionDetailPage .txActionPanel.txDelivery .txDelivery-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0 0 14px;
+}
+
+.transactionDetailPage .txActionPanel.txDelivery .txDelivery-stack > .txDelivery-check,
+.transactionDetailPage .txActionPanel.txDelivery .txDelivery-stack > .txDelivery-noteField {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.transactionDetailPage .txDelivery-noteField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0 0 14px;
+    color: var(--tx-ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.transactionDetailPage .txDelivery-noteField em {
+    margin-left: 6px;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--tx-muted);
+}
+
+.transactionDetailPage .txDelivery-textarea,
+.transactionDetailPage .txDelivery-note {
+    width: 100%;
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border: 1px solid #d7dde3;
+    border-radius: 4px;
+    background: #fff;
+    color: var(--tx-ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    box-sizing: border-box;
+}
+
+.transactionDetailPage .txDelivery-textarea {
+    display: block;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    min-height: 140px;
+    height: 140px;
+    margin: 0;
+    resize: vertical;
+    pointer-events: auto;
+    appearance: auto;
+    -webkit-appearance: auto;
+}
+
+.transactionDetailPage .txDelivery-textarea:focus {
+    outline: none;
+    border-color: #01426a;
+    box-shadow: 0 0 0 3px rgba(1, 66, 106, 0.12);
+}
+
+.transactionDetailPage .txDelivery-note {
+    background: #f7f9fb;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 13px;
+}
+
+.transactionDetailPage .txDelivery-kicker {
+    margin: 0 0 4px;
+    color: #3cb95d;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.transactionDetailPage .txDelivery-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0 0 14px;
+    padding: 14px 16px;
+    border: 1px solid #d7dde3;
+    border-radius: 6px;
+    background: #f7fbf8;
+    cursor: pointer;
+    color: var(--tx-ink);
+    font-size: 14px;
+    line-height: 1.4;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.transactionDetailPage .txDelivery-check:hover,
+.transactionDetailPage .txDelivery-check.is-checked {
+    border-color: var(--tx-green);
+    background: #eef8ea;
+    box-shadow: 0 0 0 3px rgba(60, 185, 93, 0.12);
+}
+
+.transactionDetailPage .txDelivery-check input {
+    margin-top: 3px;
+    flex: 0 0 auto;
+    accent-color: var(--tx-green);
+}
+
+.transactionDetailPage .txDelivery-check span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.transactionDetailPage .txDelivery-check strong {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.transactionDetailPage .txDelivery-check em {
+    font-style: normal;
+    color: var(--tx-muted);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.45;
+}
+
+.transactionDetailPage .txDelivery-done {
+    margin: 0;
+    padding: 12px;
+    border-radius: 4px;
+    background: #eef8ea;
+    color: #1b5e20;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.transactionDetailPage .txInspect-tips {
+    margin: 0 0 14px;
+    padding-left: 18px;
+    color: var(--tx-body);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.transactionDetailPage .txInspect-tips li + li {
+    margin-top: 4px;
+}
+
+.transactionDetailPage .txInspect-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 10px;
+}
+
+.transactionDetailPage .txInspect-admin {
+    display: inline-block;
+    color: var(--tx-muted);
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.transactionDetailPage .txInspect-admin:hover {
+    text-decoration: underline;
+}
+
+.transactionDetailPage .txActionPanel-btn--warn {
+    background: #fff;
+    color: #b42318;
+    border: 1px solid #f0c7c2;
+}
+
+.transactionDetailPage .txActionPanel-btn--warn:hover:not(:disabled) {
+    background: #fff7f6;
+}
+
+.transactionDetailPage .txModal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(1, 66, 106, 0.28);
+}
+
+.transactionDetailPage .txModal {
+    width: min(520px, 100%);
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    padding: 22px 22px 18px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(1, 66, 106, 0.18);
+}
+
+.transactionDetailPage .txModal-title {
+    margin: 0 0 8px;
+    color: var(--tx-ink);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.transactionDetailPage .txModal-text {
+    margin: 0 0 14px;
+    color: var(--tx-body);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.transactionDetailPage .txModal-whatsapp {
+    display: block;
+    margin: 0 0 18px;
+    padding: 11px 14px;
+    border-radius: 6px;
+    background: #eef8ea;
+    color: #1b5e20;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+}
+
+.transactionDetailPage .txModal-whatsapp:hover {
+    background: #e4f3df;
+}
+
+.transactionDetailPage .txModal-label {
+    margin: 0 0 8px;
+    color: var(--tx-ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.transactionDetailPage .txModal-reasons {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 14px;
+}
+
+.transactionDetailPage .txModal-reason {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #d7dde3;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--tx-ink);
+}
+
+.transactionDetailPage .txModal-reason.is-selected {
+    border-color: var(--tx-green);
+    background: #f7fbf8;
+}
+
+.transactionDetailPage .txModal-reason input {
+    accent-color: var(--tx-green);
+}
+
+.transactionDetailPage .txClosed {
+    background: #f7fbf8;
+}
+
+.transactionDetailPage .txWithdraw-btn {
+    display: block;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 0 rgba(27, 94, 32, 0.18);
+}
+
+.transactionDetailPage .txWithdraw-backdrop {
+    animation: txWithdrawFade 0.22s ease;
+}
+
+.transactionDetailPage .txWithdraw-modal {
+    overflow: hidden;
+    animation: txWithdrawPop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.transactionDetailPage .txWithdraw-steps {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px;
+}
+
+.transactionDetailPage .txWithdraw-steps span {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 1px solid #d7dde3;
+    color: var(--tx-muted);
+    font-size: 11px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+}
+
+.transactionDetailPage .txWithdraw-steps span.is-active {
+    border-color: var(--tx-green);
+    background: #3cb95d;
+    color: #fff;
+}
+
+.transactionDetailPage .txWithdraw-steps i {
+    flex: 1;
+    height: 1px;
+    background: #d7dde3;
+}
+
+.transactionDetailPage .txWithdraw-viewport,
+.txWithdraw-viewport {
+    position: relative;
+    overflow: hidden;
+    margin: 0 -4px 8px;
+}
+
+.transactionDetailPage .txWithdraw-track,
+.txWithdraw-track {
+    position: relative;
+    width: 100%;
+}
+
+.transactionDetailPage .txWithdraw-pane,
+.txWithdraw-pane {
+    width: 100%;
+    padding: 0 4px;
+    box-sizing: border-box;
+    transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.24s ease;
+}
+
+.transactionDetailPage .txWithdraw-pane.is-active,
+.txWithdraw-pane.is-active {
+    position: relative;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+}
+
+.transactionDetailPage .txWithdraw-pane:not(.is-active),
+.txWithdraw-pane:not(.is-active) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.transactionDetailPage .txWithdraw-track.is-step-0 .txWithdraw-pane:last-child,
+.txWithdraw-track.is-step-0 .txWithdraw-pane:last-child {
+    transform: translateX(18px);
+    opacity: 0;
+}
+
+.transactionDetailPage .txWithdraw-track.is-step-1 .txWithdraw-pane:first-child,
+.txWithdraw-track.is-step-1 .txWithdraw-pane:first-child {
+    transform: translateX(-18px);
+    opacity: 0;
+}
+
+.transactionDetailPage .txWithdraw-choice span {
+    display: grid;
+    gap: 2px;
+}
+
+.transactionDetailPage .txWithdraw-choice strong {
+    font-size: 14px;
+}
+
+.transactionDetailPage .txWithdraw-choice em {
+    font-style: normal;
+    color: var(--tx-muted);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.transactionDetailPage .txWithdraw-fields {
+    display: grid;
+    gap: 12px;
+    animation: txWithdrawSlide 0.28s ease;
+}
+
+.transactionDetailPage .txWithdraw-field {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    color: var(--tx-ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.transactionDetailPage .txWithdraw-field em {
+    margin-left: 6px;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--tx-muted);
+}
+
+.transactionDetailPage .txWithdraw-input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d7dde3;
+    border-radius: 4px;
+    background: #fff;
+    color: var(--tx-ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    box-sizing: border-box;
+}
+
+.transactionDetailPage .txWithdraw-input:focus {
+    outline: none;
+    border-color: #01426a;
+    box-shadow: 0 0 0 3px rgba(1, 66, 106, 0.12);
+}
+
+.transactionDetailPage .txWithdraw-field.is-invalid .txWithdraw-input {
+    border-color: #d92d20;
+}
+
+.transactionDetailPage .txWithdraw-error {
+    font-size: 12px;
+    font-weight: 500;
+    color: #b42318;
+}
+
+@keyframes txWithdrawFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes txWithdrawPop {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes txWithdrawSlide {
+    from {
+        opacity: 0;
+        transform: translateX(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.txModalHost {
+    --tx-ink: #01426a;
+    --tx-body: #4f4f4f;
+    --tx-muted: #828282;
+    --tx-green: #3cb95d;
+}
+
+.txModalHost.txModal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(1, 66, 106, 0.28);
+    animation: txWithdrawFade 0.22s ease;
+}
+
+.txModalHost .txModal {
+    width: min(520px, 100%);
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    padding: 22px 22px 18px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(1, 66, 106, 0.18);
+}
+
+.txModalHost .txWithdraw-modal {
+    overflow: hidden;
+    animation: txWithdrawPop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.txModalHost .txDelivery-kicker {
+    margin: 0 0 4px;
+    color: #3cb95d;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.txModalHost .txModal-title {
+    margin: 0 0 8px;
+    color: var(--tx-ink);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.txModalHost .txModal-text {
+    margin: 0 0 14px;
+    color: var(--tx-body);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.txModalHost .txModal-reasons {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 14px;
+}
+
+.txModalHost .txModal-reason {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #d7dde3;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--tx-ink);
+}
+
+.txModalHost .txModal-reason.is-selected {
+    border-color: var(--tx-green);
+    background: #f7fbf8;
+}
+
+.txModalHost .txModal-reason input {
+    accent-color: var(--tx-green);
+}
+
+.txModalHost .txWithdraw-steps {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px;
+}
+
+.txModalHost .txWithdraw-steps span {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 1px solid #d7dde3;
+    color: var(--tx-muted);
+    font-size: 11px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+}
+
+.txModalHost .txWithdraw-steps span.is-active {
+    border-color: var(--tx-green);
+    background: #3cb95d;
+    color: #fff;
+}
+
+.txModalHost .txWithdraw-steps i {
+    flex: 1;
+    height: 1px;
+    background: #d7dde3;
+}
+
+.txModalHost .txWithdraw-choice span {
+    display: grid;
+    gap: 2px;
+}
+
+.txModalHost .txWithdraw-choice strong {
+    font-size: 14px;
+}
+
+.txModalHost .txWithdraw-choice em {
+    font-style: normal;
+    color: var(--tx-muted);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.txModalHost .txWithdraw-fields {
+    display: grid;
+    gap: 12px;
+    animation: txWithdrawSlide 0.28s ease;
+}
+
+.txModalHost .txWithdraw-field {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    color: var(--tx-ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.txModalHost .txWithdraw-field em {
+    margin-left: 6px;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--tx-muted);
+}
+
+.txModalHost .txWithdraw-input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d7dde3;
+    border-radius: 4px;
+    background: #fff;
+    color: var(--tx-ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    box-sizing: border-box;
+}
+
+.txModalHost .txWithdraw-input:focus {
+    outline: none;
+    border-color: #01426a;
+    box-shadow: 0 0 0 3px rgba(1, 66, 106, 0.12);
+}
+
+.txModalHost .txWithdraw-field.is-invalid .txWithdraw-input {
+    border-color: #d92d20;
+}
+
+.txModalHost .txWithdraw-error,
+.txModalHost .txActionPanel-error {
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #b42318;
+}
+
+.txModalHost .txInspect-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 10px;
+}
+
+.txModalHost .txActionPanel-btn {
+    appearance: none;
+    border: 0;
+    border-radius: 4px;
+    background: var(--tx-green);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    cursor: pointer;
+}
+
+.txModalHost .txActionPanel-btn:hover:not(:disabled) {
+    background: #34a552;
+}
+
+.txModalHost .txActionPanel-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.txModalHost .txActionPanel-btn--ghost {
+    background: #fff;
+    color: var(--tx-ink);
+    border: 1px solid #d7dde3;
+}
+
+.txModalHost .txActionPanel-btn--ghost:hover:not(:disabled) {
+    background: #f7f9fb;
+}
+
+.transactionDetailPage .txInvoice-id {
+    margin: 0 0 14px;
+    color: var(--tx-muted);
+    font-size: 12px;
+}
+
+.transactionDetailPage .txInvoice-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 8px;
+    color: var(--tx-body);
+    font-size: 14px;
+}
+
+.transactionDetailPage .txInvoice-line.is-total {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--tx-line);
+    color: var(--tx-ink);
+}
+
+.transactionDetailPage .txPayMethods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0 0 14px;
+}
+
+.transactionDetailPage .txPayMethod {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 12px;
+    border: 1px solid #d7dde3;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.transactionDetailPage .txPayMethod.is-selected {
+    border-color: var(--tx-green);
+    background: #f7fbf8;
+}
+
+.transactionDetailPage .txPayMethod input {
+    margin-top: 3px;
+    accent-color: var(--tx-green);
+}
+
+.transactionDetailPage .txPayMethod span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.transactionDetailPage .txPayMethod strong {
+    color: var(--tx-ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.transactionDetailPage .txPayMethod em {
+    font-style: normal;
+    color: var(--tx-muted);
+    font-size: 12px;
+}
+
+@media (max-width: 720px) {
+    .transactionDetailPage .txPayMethods {
+        grid-template-columns: 1fr;
+    }
+}
+
+.transactionDetailPage .txSharePanel {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+    border: 1px solid var(--tx-line);
+    border-radius: 4px;
+    padding: 14px;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(60, 185, 93, 0.07), transparent 40%),
+        linear-gradient(135deg, #fbfcfd 0%, #f4f7f5 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.transactionDetailPage .txSharePanel-qrBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0;
+}
+
+.transactionDetailPage .txSharePanel-copy {
+    min-width: 0;
+}
+
+.transactionDetailPage .txSharePanel-kicker {
+    margin: 0 0 2px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tx-green);
+}
+
+.transactionDetailPage .txSharePanel-title {
+    margin: 0 0 4px;
+    font-weight: 700;
+    color: var(--tx-ink);
+    font-size: 15px;
+    line-height: 1.3;
+}
+
+.transactionDetailPage .txSharePanel-text {
+    margin: 0 0 10px;
+    color: var(--tx-body);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.transactionDetailPage .txSharePanel-text a {
+    color: #1565c0;
+    overflow-wrap: anywhere;
+}
+
+.transactionDetailPage .txSharePanel-linkRow {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.transactionDetailPage .txSharePanel-input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #cfd8dc;
+    border-radius: 4px;
+    background: #fff;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #37474f;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.transactionDetailPage .txSharePanel-copyBtn {
+    appearance: none;
+    border: 0;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #45c568, var(--tx-green));
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 0 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.transactionDetailPage .txSharePanel-copyBtn:hover {
+    background: linear-gradient(180deg, var(--tx-green), #34a552);
+}
+
+.transactionDetailPage .txSharePanel-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.transactionDetailPage .txShareSocial {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #d7dde3;
+    border-radius: 999px;
+    background: #fff;
+    color: #37474f;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px 5px 5px;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.transactionDetailPage .txShareSocial:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(1, 66, 106, 0.1);
+    border-color: #b0bec5;
+}
+
+.transactionDetailPage .txShareSocial-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 800;
+    color: #fff;
+    background: #607d8b;
+}
+
+.transactionDetailPage .txShareSocial--whatsapp .txShareSocial-icon {
+    background: #25d366;
+}
+
+.transactionDetailPage .txShareSocial--telegram .txShareSocial-icon {
+    background: #2aabee;
+}
+
+.transactionDetailPage .txShareSocial--facebook .txShareSocial-icon {
+    background: #1877f2;
+    font-family: Georgia, serif;
+    font-size: 13px;
+}
+
+.transactionDetailPage .txShareSocial--mail .txShareSocial-icon {
+    background: #01426a;
+}
+
+.transactionDetailPage .txShareSocial--more .txShareSocial-icon {
+    background: #546e7a;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.transactionDetailPage .txShareQr {
+    position: relative;
+    padding: 8px;
+    background:
+        linear-gradient(45deg, rgba(1, 66, 106, 0.04) 25%, transparent 25%) -6px 0 / 12px 12px,
+        linear-gradient(-45deg, rgba(1, 66, 106, 0.04) 25%, transparent 25%) -6px 0 / 12px 12px,
+        #fff;
+    border: 1px solid #d7e0e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(1, 66, 106, 0.08);
+}
+
+.transactionDetailPage .txShareQr-finder {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--tx-green);
+    pointer-events: none;
+}
+
+.transactionDetailPage .txShareQr-finder--tl {
+    top: 4px;
+    left: 4px;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 3px 0 0 0;
+}
+
+.transactionDetailPage .txShareQr-finder--tr {
+    top: 4px;
+    right: 4px;
+    border-left: 0;
+    border-bottom: 0;
+    border-radius: 0 3px 0 0;
+}
+
+.transactionDetailPage .txShareQr-finder--bl {
+    bottom: 4px;
+    left: 4px;
+    border-right: 0;
+    border-top: 0;
+    border-radius: 0 0 0 3px;
+}
+
+.transactionDetailPage .txShareQr-frame {
+    position: relative;
+    width: 108px;
+    height: 108px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #eceff1;
+}
+
+.transactionDetailPage .txShareQr-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.transactionDetailPage .txShareQr-badge {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    margin: -12px 0 0 -12px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #45c568, var(--tx-green));
+    color: #fff;
+    font-weight: 800;
+    font-size: 12px;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 0 3px #fff, 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+.transactionDetailPage .txSharePanel-qrHint {
+    margin: 0;
+    font-size: 11px;
+    color: var(--tx-muted);
+    text-align: center;
+}
+
+.transactionDetailPage .txDetail-itemsCard {
+    padding: 0;
+    overflow: hidden;
+}
+
+.transactionDetailPage .txDetail-cardHead {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--tx-ink);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.transactionDetailPage .txDetail-cardHead .txDetail-icon {
+    color: var(--tx-muted);
+}
+
+.transactionDetailPage .txDetail-itemsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactionDetailPage .txDetail-itemsTable thead th {
+    text-align: left;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--tx-line);
+    background: #fafafa;
+}
+
+.transactionDetailPage .txDetail-itemsTable td {
+    padding: 16px 20px;
+    border-top: 1px solid #eee;
+    vertical-align: top;
+    color: var(--tx-body);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.transactionDetailPage .txDetail-itemsTable tbody tr:first-child td {
+    border-top: 0;
+}
+
+.transactionDetailPage .txDetail-itemsTable td.is-right {
+    text-align: right;
+    white-space: nowrap;
+    padding-left: 16px;
+    font-variant-numeric: tabular-nums;
+}
+
+.transactionDetailPage .txDetail-itemName {
+    font-weight: 700;
+    color: #212121;
+    margin-bottom: 4px;
+}
+
+.transactionDetailPage .txDetail-itemDesc {
+    margin: 0;
+    color: var(--tx-muted);
+}
+
+.transactionDetailPage .txDetail-itemsTable tr.is-muted td {
+    color: var(--tx-muted);
+    background: #fcfcfc;
+}
+
+.transactionDetailPage .txDetail-itemsTable tr.is-total td {
+    color: #212121;
+    background: #f7faf8;
+    border-top: 1px solid #dce8e0;
+}
+
+.transactionDetailPage .txDetail-cancelWrap {
+    padding: 8px 4px 0;
+}
+
+.transactionDetailPage .kyc-cancelTransactionButton {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: #d30000;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: not-allowed;
+    opacity: 0.75;
+    padding: 0;
+}
+
+.transactionDetailPage .txDetail-aside .txDetail-card {
+    padding: 20px;
+}
+
+.transactionDetailPage .txDetail-aside .txDetail-cardHead {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.transactionDetailPage .txDetail-history {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.transactionDetailPage .txDetail-history li {
+    position: relative;
+    padding-left: 16px;
+}
+
+.transactionDetailPage .txDetail-history li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tx-green);
+    box-shadow: 0 0 0 3px rgba(60, 185, 93, 0.15);
+}
+
+.transactionDetailPage .txDetail-history li + li {
+    margin-top: 16px;
+}
+
+.transactionDetailPage .txDetail-history strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #212121;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.transactionDetailPage .txDetail-history p {
+    margin: 0;
+    color: var(--tx-body);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.transactionDetailPage .txDetail-faqList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.transactionDetailPage .txDetail-faq {
+    border: 0;
+    border-bottom: 1px solid #eee;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.transactionDetailPage .txDetail-faq:last-child {
+    border-bottom: 0;
+}
+
+.transactionDetailPage .txDetail-faqToggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    padding: 14px 2px;
+    cursor: pointer;
+    color: var(--tx-body);
+    font-size: 14px;
+    line-height: 1.35;
+}
+
+.transactionDetailPage .txDetail-faqChevron {
+    color: var(--tx-muted);
+    transition: transform 0.15s ease;
+}
+
+.transactionDetailPage .txDetail-faq.is-open .txDetail-faqChevron {
+    transform: rotate(180deg);
+    color: var(--tx-ink);
+}
+
+.transactionDetailPage .txDetail-faqBody {
+    padding: 0 2px 14px;
+    color: var(--tx-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.transactionDetailPage .txDetail-moreHelp {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.transactionDetailPage .txDetail-moreHelp a {
+    color: #1565c0;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+@media (max-width: 960px) {
+    .transactionDetailPage .txDetail-grid.section-container {
+        grid-template-columns: 1fr;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .transactionDetailPage .txDetail-stepper {
+        overflow-x: auto;
+        grid-template-columns: repeat(5, minmax(72px, 1fr));
+    }
+
+    .transactionDetailPage .txDetail-title {
+        font-size: 22px;
+    }
+
+    .transactionDetailPage .txDetail-card--primary {
+        padding: 20px 16px;
+    }
+
+    .transactionDetailPage .txSharePanel {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
+
+    .transactionDetailPage .txSharePanel-qrBlock {
+        order: 0;
+    }
+
+    .transactionDetailPage .txSharePanel-linkRow {
+        flex-direction: column;
+    }
+
+    .transactionDetailPage .txSharePanel-copyBtn {
+        height: 36px;
+    }
+}

@@ -1,0 +1,1026 @@
+/* Wassitna minimal overrides on Escrow.com stylesheet */
+
+:root {
+    --section-max-width: 1120px;
+}
+
+a.headerV2-primaryNav-title {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+a.headerV2-primaryNav-title:hover,
+a.headerV2-primaryNav-title:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
+#benefits,
+#how-it-works,
+#services,
+#partners,
+#pay,
+#offer,
+#licensing,
+#about,
+#contact {
+    scroll-margin-top: 80px;
+}
+
+/* Wassitna wordmark (Escrow logo-primary / logo-secondary colors) */
+.headerV2-logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.headerV2-logo:hover,
+.headerV2-logo:focus {
+    text-decoration: none;
+    color: inherit;
+}
+
+.headerV2-logo .logo-wordmark,
+.defaultFooter-logo .logo-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    width: 153px;
+    height: 18px;
+}
+
+.headerV2-logo .logo-name,
+.defaultFooter-logo .logo-name {
+    font-family: Montserrat, Helvetica, Arial, 'Microsoft Yahei', STXihei, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 18px;
+    white-space: nowrap;
+}
+
+.headerV2-logo .logo-primary,
+.defaultFooter-logo .logo-primary {
+    color: currentColor;
+    fill: currentColor;
+}
+
+.headerV2-logo .logo-secondary,
+.defaultFooter-logo .logo-secondary {
+    color: #3cb95d;
+    fill: #3cb95d;
+}
+
+.is-header-scrollTop .headerV2-logo .logo-primary,
+.header--transparent .is-header-scrollTop .headerV2-logo .logo-primary {
+    color: #fff;
+    fill: #fff;
+}
+
+.is-header-scrollTop .headerV2-logo .logo-secondary,
+.header--transparent .is-header-scrollTop .headerV2-logo .logo-secondary {
+    color: #3cb95d;
+    fill: #3cb95d;
+}
+
+.is-sticky .headerV2-logo .logo-primary {
+    color: #01426a;
+    fill: #01426a;
+}
+
+/* When hero-transparent header becomes sticky, restore solid Escrow bar */
+.header--transparent .headerV2.is-sticky .headerV2-primary {
+    background-color: #fff;
+    color: #212121;
+    -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.header--transparent .headerV2.is-sticky .headerV2-logo .logo-primary,
+.header--transparent .headerV2.is-sticky .headerV2-logo .logo-text--primary {
+    color: #01426a;
+    fill: #01426a;
+}
+
+.header--transparent .headerV2.is-sticky .headerV2-menuBtn-icon {
+    fill: #4f5759;
+}
+
+.headerV2-logo .logo-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+}
+
+.headerV2-logo .logo-compact .logo-shield {
+    width: 22px;
+    height: 28px;
+    flex: 0 0 22px;
+}
+
+.headerV2-logo .logo-compact .logo-name {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.steps-image img,
+.siteFeatures-iconHolder img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.siteFeatures-iconHolder img {
+    width: auto;
+    max-height: 56px;
+}
+
+.defaultFooter-logo .logo-wordmark {
+    width: auto;
+    height: auto;
+}
+
+.defaultFooter-logo .logo-name {
+    font-size: 22px;
+    line-height: 1.2;
+    color: #fff;
+}
+
+.defaultFooter-logo .logo-primary {
+    color: #fff;
+    fill: #fff;
+}
+
+.defaultFooter-logo .logo-secondary {
+    color: #3cb95d;
+    fill: #3cb95d;
+}
+
+/* Content / auth page helpers (inner pages still use these) */
+.wrap {
+    width: 100%;
+    max-width: var(--section-max-width);
+    min-width: 288px;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+@media (min-width: 480px) {
+    .wrap {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+.contentPage {
+    padding: 48px 0 72px;
+    background: #fff;
+    min-height: 50vh;
+}
+
+.contentPage h1 {
+    font-family: Montserrat, Helvetica, Arial, sans-serif;
+    font-size: 3.2rem;
+    color: #01426a;
+    margin: 0 0 16px;
+}
+
+.contentPage h2 {
+    font-size: 2.2rem;
+    color: #01426a;
+    margin: 32px 0 12px;
+}
+
+.contentPage p,
+.contentPage li {
+    font-size: 1.6rem;
+    line-height: 1.6;
+    color: #2b3340;
+}
+
+.faqPage {
+    padding: 40px 0 72px;
+    background: #fff;
+}
+
+.faqPage-wrap {
+    max-width: 820px;
+}
+
+.faqIntro p {
+    margin: 0 0 24px;
+    font-size: 1.6rem;
+    line-height: 1.65;
+    color: #4f5966;
+}
+
+.faqToolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.faqSearch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #d5dde3;
+    border-radius: 10px;
+    background: #fff;
+}
+
+.faqSearch:focus-within {
+    border-color: #3cb95d;
+    box-shadow: 0 0 0 3px rgba(60, 185, 93, 0.16);
+}
+
+.faqSearch input {
+    flex: 1;
+    border: 0;
+    outline: none;
+    font-size: 15px;
+    background: transparent;
+}
+
+.faqSearch svg {
+    width: 18px;
+    height: 18px;
+    stroke: #6b7580;
+    fill: none;
+}
+
+.faqTabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.faqTab {
+    appearance: none;
+    border: 1px solid #d5dde3;
+    border-radius: 999px;
+    background: #fff;
+    color: #3d4a57;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 12px;
+    cursor: pointer;
+}
+
+.faqTab:hover {
+    background: #f7f9fb;
+}
+
+.faqTab.is-active {
+    border-color: #b7e0c2;
+    background: #eef8ea;
+    color: #17663a;
+}
+
+.faqCount {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: #6b7580;
+}
+
+.faqList {
+    border: 1px solid #e6ebef;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(16, 24, 40, 0.04);
+}
+
+.faqItem {
+    border-bottom: 1px solid #eef2f5;
+}
+
+.faqItem:last-child {
+    border-bottom: 0;
+}
+
+.faqToggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    padding: 16px 18px;
+    cursor: pointer;
+    color: #01426a;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.faqToggle:hover {
+    background: #f7fbf8;
+}
+
+.faqChevron {
+    flex: 0 0 auto;
+    color: #828282;
+    transition: transform 0.15s ease;
+}
+
+.faqItem.is-open .faqChevron {
+    transform: rotate(180deg);
+    color: #3cb95d;
+}
+
+.faqBody {
+    padding: 0 18px 16px;
+    color: #4f5966;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.faqEmpty {
+    margin: 0;
+    padding: 24px 18px;
+    color: #6b7580;
+    font-size: 15px;
+}
+
+.faqFooter {
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid #e6ebef;
+}
+
+.faqFooter h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    color: #01426a;
+}
+
+.faqFooter p {
+    margin: 0 0 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4f5966;
+}
+
+.faqFooter a {
+    color: #3cb95d;
+    font-weight: 600;
+}
+
+.section--form {
+    min-height: calc(100vh - 180px);
+}
+
+.section-form .defaultForm .field {
+    margin-bottom: 2.4rem;
+}
+
+.section-form .defaultForm .btn--block {
+    margin-top: 0.8rem;
+}
+
+.authForm-or {
+    display: block;
+    text-align: center;
+    margin: 2.4rem 0;
+    color: #4f5759;
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+}
+
+.section-form .signup-link {
+    padding-left: 1.6rem;
+}
+
+.calculator-formService {
+    position: relative;
+}
+
+.calculator-formService.is-open {
+    z-index: 30;
+}
+
+.calculator-formService .defaultSelect.is-open {
+    overflow: visible;
+    z-index: 30;
+}
+
+.calculator-formService .defaultSelect.is-placeholder .defaultSelect-select {
+    color: #8a939c;
+}
+
+.calculator-formService .defaultSelect-select {
+    cursor: pointer;
+    text-align: left;
+}
+
+.calculator-formService .defaultSelect-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 40;
+    margin: 0;
+    padding: 6px 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #d5dce0;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0, 43, 73, 0.14);
+    max-height: 260px;
+    overflow: auto;
+}
+
+.calculator-formService .defaultSelect-option {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    border: 0;
+    background: transparent;
+    color: #002b49;
+    font: inherit;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    text-align: left;
+    cursor: pointer;
+}
+
+.calculator-formService .defaultSelect-option:hover,
+.calculator-formService .defaultSelect-option.is-selected {
+    background: #eef8ea;
+}
+
+.startTransactionPage .MuiInputBase-select:not(.is-filled) .MuiSelect-select {
+    color: #8a939c;
+}
+
+.authAlert {
+    margin: 0 0 2rem;
+    padding: 14px 16px;
+    border: 1px solid #f0c7c2;
+    border-left: 4px solid #c62828;
+    border-radius: 4px;
+    background: #fff7f6;
+}
+
+.authAlert-title {
+    margin: 0 0 4px;
+    color: #8a1f1a;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.authAlert-message {
+    margin: 0;
+    color: #5f2a26;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.authAlert-list {
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.authAlert-list li {
+    margin: 0 0 6px;
+    color: #5f2a26;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.authAlert-list li + li {
+    margin-top: 4px;
+}
+
+.authCard {
+    max-width: 440px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 32px 28px;
+}
+
+.authCard .field {
+    margin-bottom: 16px;
+}
+
+.authCard .field-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #4f5759;
+}
+
+.authCard .defaultInput {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #c5ced6;
+    border-radius: 4px;
+    font-size: 1.6rem;
+}
+
+.authCard .btn {
+    width: 100%;
+}
+
+.authSwitch {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.pageNotice {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    background: #f5f7f9;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    color: #01426a;
+}
+
+.headerV2-authNav-link {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+.logo-mark-link {
+    display: inline-flex;
+    line-height: 0;
+}
+
+header[data-header-type='simplified'] .headerV3-wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    height: 32px;
+    font-family: Montserrat, Helvetica, Arial, sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    line-height: 32px;
+    color: #002b49;
+}
+
+header[data-header-type='simplified'] .headerV3-wordmark .logo-primary,
+header[data-header-type='simplified'] .headerV3-wordmark .logo-text--primary {
+    color: #002b49;
+    fill: #002b49;
+}
+
+header[data-header-type='simplified'] .headerV3-wordmark .logo-secondary,
+header[data-header-type='simplified'] .headerV3-wordmark .logo-text--secondary {
+    color: #3cb95d;
+    fill: #3cb95d;
+}
+
+.pageContent,
+.authPage {
+    max-width: var(--section-max-width);
+    margin: 0 auto;
+    padding: 48px 16px 80px;
+}
+
+@media (min-width: 480px) {
+    .pageContent,
+    .authPage {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+.authPage {
+    max-width: 480px;
+}
+
+.calculator-fee-cap {
+    font-weight: 400;
+    opacity: 0.85;
+}
+
+.feeCalculatorPage {
+    background: #f5f7f9;
+}
+
+.feeCalculator-wrap {
+    display: grid;
+    gap: 32px;
+    max-width: 920px;
+}
+
+@media (min-width: 860px) {
+    .feeCalculator-wrap {
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: start;
+    }
+}
+
+.feeCalculator-card,
+.feeCalculator-schedule {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px hsla(185, 8%, 67%, 0.35);
+    padding: 28px 24px;
+}
+
+.feeCalculator-submit {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.feeCalculator-result {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e6ebef;
+}
+
+.feeCalculator-result-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 1.6rem;
+    color: #2b3340;
+}
+
+.feeCalculator-result-row--total {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #e6ebef;
+    color: #01426a;
+    font-size: 1.8rem;
+}
+
+.feeCalculator-note {
+    margin: 8px 0 16px;
+    font-size: 1.4rem;
+    color: #5b6570;
+}
+
+.feeCalculator-schedule h2 {
+    margin-top: 0;
+}
+
+.feeCalculator-schedule ul,
+.feeHelp-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.feeCalculator-schedule li,
+.feeHelp-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eef2f5;
+    font-size: 1.5rem;
+    color: #2b3340;
+}
+
+.feeCalculator-schedule li:last-child,
+.feeHelp-list li:last-child {
+    border-bottom: 0;
+}
+
+.feeHelp-list {
+    margin-bottom: 16px;
+}
+
+.trustPage {
+    background: #f5f7f9;
+    padding: 48px 0 88px;
+}
+
+.trustPage-wrap {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.trustPage-kicker {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #3cb95d;
+}
+
+.trustPage h2 {
+    margin: 0 0 16px;
+    font-family: Montserrat, Helvetica, Arial, sans-serif;
+    font-size: 2.8rem;
+    line-height: 1.25;
+    color: #01426a;
+}
+
+.trustPage-intro p,
+.trustPage-card p,
+.trustPage-note p,
+.trustPage-grid p,
+.trustPage-steps p {
+    font-size: 1.6rem;
+    line-height: 1.65;
+    color: #2b3340;
+}
+
+.trustPage-intro p + p {
+    margin-top: 12px;
+}
+
+.trustPage-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 32px 0 48px;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 720px) {
+    .trustPage-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.trustPage-stats li {
+    padding: 18px 16px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid #e6ebef;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
+}
+
+.trustPage-stats strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.8rem;
+    color: #01426a;
+}
+
+.trustPage-stats span {
+    font-size: 1.3rem;
+    color: #5b6570;
+}
+
+.trustPage-block {
+    margin-bottom: 48px;
+}
+
+.trustPage-steps {
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+}
+
+.trustPage-steps li {
+    display: flex;
+    gap: 16px;
+    padding: 18px 18px;
+    background: #fff;
+    border: 1px solid #e6ebef;
+    border-radius: 12px;
+}
+
+.trustPage-steps span {
+    flex: 0 0 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #eef8ea;
+    color: #217f2d;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.trustPage-steps h3 {
+    margin: 0 0 4px;
+    font-size: 1.7rem;
+    color: #01426a;
+}
+
+.trustPage-grid {
+    display: grid;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+@media (min-width: 720px) {
+    .trustPage-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.trustPage-grid article,
+.trustPage-card {
+    padding: 22px 20px;
+    background: #fff;
+    border: 1px solid #e6ebef;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
+}
+
+.trustPage-grid h3,
+.trustPage-card h3 {
+    margin: 0 0 10px;
+    font-size: 1.7rem;
+    color: #01426a;
+}
+
+.trustPage-note {
+    padding: 22px 22px;
+    border-radius: 12px;
+    background: #fff8e8;
+    border: 1px solid #f0e0b0;
+    margin-bottom: 36px;
+}
+
+.trustPage-note h3 {
+    margin: 0 0 8px;
+    color: #7a5b1e;
+    font-size: 1.7rem;
+}
+
+.trustPage-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+}
+
+.trustPage-cta-link {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #01426a;
+}
+
+.trustPage-channels {
+    display: grid;
+    gap: 12px;
+    margin: 28px 0 32px;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 720px) {
+    .trustPage-channels {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.trustPage-channels li {
+    padding: 18px;
+    background: #fff;
+    border: 1px solid #e6ebef;
+    border-radius: 12px;
+}
+
+.trustPage-channels span,
+.trustPage-channels small {
+    display: block;
+    color: #5b6570;
+}
+
+.trustPage-channels span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.trustPage-channels a {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #01426a;
+}
+
+.trustPage-channels small {
+    font-size: 1.3rem;
+}
+
+.trustPage-split {
+    display: grid;
+    gap: 16px;
+}
+
+@media (min-width: 860px) {
+    .trustPage-split {
+        grid-template-columns: 1.3fr 0.7fr;
+        align-items: start;
+    }
+}
+
+.trustForm {
+    display: grid;
+    gap: 14px;
+}
+
+.trustForm-row {
+    display: grid;
+    gap: 14px;
+}
+
+@media (min-width: 560px) {
+    .trustForm-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.trustForm label {
+    display: grid;
+    gap: 6px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #5b6570;
+}
+
+.trustForm input,
+.trustForm select,
+.trustForm textarea {
+    width: 100%;
+    border: 1px solid #d5dde3;
+    border-radius: 8px;
+    padding: 12px 12px;
+    font: inherit;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #1b2430;
+    background: #fff;
+}
+
+.trustForm input:focus,
+.trustForm select:focus,
+.trustForm textarea:focus {
+    outline: none;
+    border-color: #01426a;
+    box-shadow: 0 0 0 3px rgba(1, 66, 106, 0.12);
+}
+
+.trustForm-fine {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #5b6570;
+}
+
+.trustPage-sent p {
+    margin: 0 0 16px;
+}
+
+.trustPage-card--warn {
+    background: #fff8e8;
+    border-color: #f0e0b0;
+}
+
+.trustPage-card--warn ul {
+    margin: 0 0 12px;
+    padding-left: 18px;
+    font-size: 1.5rem;
+    line-height: 1.55;
+    color: #2b3340;
+}
+
+.trustPage-aside {
+    display: grid;
+    gap: 14px;
+}
+
+/* Escrow sprites map Algeria to DZA / +213, not DZD */
+.defaultSelect-flag[data-select-value='DZD'],
+.defaultSelect-flag[data-select-value='DZA'],
+.defaultSelect-flag[data-select-value='DA'],
+.defaultSelect-flag[data-select-value='Algeria'],
+.defaultSelect-flag[data-select-value='+213'] {
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    border-radius: 4px;
+    background-color: transparent;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 480'%3E%3Cpath fill='%23fff' d='M320 0h320v480H320z'/%3E%3Cpath fill='%23006233' d='M0 0h320v480H0z'/%3E%3Cpath fill='%23d21034' d='M424 180a120 120 0 1 0 0 120 96 96 0 1 1 0-120m4 60-108-35.2 67.2 90.5V184.6l-67.2 90.5z'/%3E%3C/svg%3E");
+}
