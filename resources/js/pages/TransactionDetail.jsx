@@ -13,24 +13,6 @@ import InspectionPanel from '../components/InspectionPanel';
 import { deliveryKind, deliveryStepLabel } from '../delivery';
 import { faqPreview } from '../faq';
 
-const warningIcon = (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.1"
-        className="icon icon--warning"
-        width="22.5"
-        height="20"
-        viewBox="0 0 22.5 20"
-        aria-hidden="true"
-    >
-        <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M20.6,20H1.9c-1,0-1.9-0.8-1.9-1.9c0-0.3,0.1-0.7,0.2-0.9L9.6,0.9  C9.9,0.4,10.6,0,11.2,0s1.3,0.4,1.6,0.9l9.4,16.2c0.2,0.3,0.2,0.6,0.2,0.9C22.5,19.2,21.7,20,20.6,20z M11.3,1.9L11.3,1.9L11.3,1.9  L1.9,18.1l18.8,0L11.3,1.9z M11.2,13.7c0.7,0,1.2,0.6,1.2,1.2s-0.6,1.2-1.2,1.2S10,15.7,10,15S10.6,13.7,11.2,13.7z M11.9,12  c0,0.3-0.3,0.5-0.6,0.5s-0.6-0.2-0.6-0.5L10,8.3c0-0.1,0-0.1,0-0.2c0-0.7,0.6-1.2,1.2-1.2s1.2,0.6,1.2,1.2c0,0.1,0,0.1,0,0.2  L11.9,12z"
-        />
-    </svg>
-);
-
 const copyIcon = (
     <svg className="txDetail-icon" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
@@ -123,6 +105,10 @@ function viewerContext(tx, user) {
     const canAccept = Boolean(fromApi.can_accept);
     const canPay = Boolean(fromApi.can_pay);
     const isCreator = fromApi.is_creator ?? false;
+    const inviteStatus = fromApi.invite_status || (canAccept ? 'pending' : 'accepted');
+    const iAccepted = inviteStatus === 'accepted';
+    const waitingOn = fromApi.waiting_on || counterRole;
+    const waitingParty = waitingOn === 'buyer' ? buyer : waitingOn === 'seller' ? seller : counterparty;
 
     return {
         myRole,
@@ -131,7 +117,12 @@ function viewerContext(tx, user) {
         canAccept,
         canPay,
         isCreator,
-        showShare: tx?.status === 'pending_acceptance' && !canAccept,
+        iAccepted,
+        waitingOn,
+        waitingParty,
+        buyerAccepted: Boolean(fromApi.buyer_accepted),
+        sellerAccepted: Boolean(fromApi.seller_accepted),
+        showShare: Boolean(isCreator && tx?.status === 'pending_acceptance'),
     };
 }
 
@@ -143,7 +134,6 @@ export default function TransactionDetail() {
     const [tx, setTx] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [emailSent, setEmailSent] = useState(false);
     const [copied, setCopied] = useState(false);
     const [linkCopied, setLinkCopied] = useState(false);
     const [openFaq, setOpenFaq] = useState(null);
@@ -205,7 +195,8 @@ export default function TransactionDetail() {
     const buyer = partyByRole(tx?.parties, 'buyer');
     const seller = partyByRole(tx?.parties, 'seller');
     const view = useMemo(() => (tx ? viewerContext(tx, user) : null), [tx, user]);
-    const waitingOn = view?.counterRole || 'buyer';
+    const waitingOn = view?.waitingOn || view?.counterRole || 'buyer';
+    const waitingParty = view?.waitingParty || view?.counterparty;
     const shareUrl = useMemo(() => {
         if (!tx?.ulid || typeof window === 'undefined') return '';
         return `${window.location.origin}/transaction/${tx.ulid}`;
@@ -456,37 +447,6 @@ export default function TransactionDetail() {
             <HeaderV3Simplified />
             <main>
                 <div data-container="spa" id="spa">
-                    <div className="announcement announcement--warning announcement--icon headerV3-announcement--warning">
-                        <div className="announcement-container">
-                            <div className="announcement-content">
-                                <span className="announcement-icon">
-                                    <div>{warningIcon}</div>
-                                </span>
-                                <span className="announcement-title">Please verify your email address</span>
-                                <div className="announcement-extra">
-                                    <span>
-                                        Verify your email address to confirm that this account belongs to you.
-                                        Haven&apos;t received a verification email?{' '}
-                                    </span>
-                                    <a
-                                        role="button"
-                                        tabIndex={0}
-                                        className="headerV3-announcement-link"
-                                        onClick={() => setEmailSent(true)}
-                                        onKeyDown={(event) => {
-                                            if (event.key === 'Enter' || event.key === ' ') {
-                                                event.preventDefault();
-                                                setEmailSent(true);
-                                            }
-                                        }}
-                                    >
-                                        {emailSent ? 'Verification email sent' : 'Send verification email'}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div className="txDetail section--mid">
                         <div className="section-container section--small txDetail-grid">
                             <div className="txDetail-main">
@@ -547,38 +507,75 @@ export default function TransactionDetail() {
                                         </span>
                                     </div>
 
-                                    {tx.status === 'pending_acceptance' && view?.showShare ? (
-                                        <div className="txNextStep" role="status">
-                                            <p className="txNextStep-title">Waiting for the {waitingOn} to agree</p>
-                                            <p className="txNextStep-text">
-                                                Share the link below with{' '}
-                                                {view.counterparty?.email ? (
-                                                    <a href={`mailto:${view.counterparty.email}`}>
-                                                        {view.counterparty.email}
-                                                    </a>
-                                                ) : (
-                                                    <strong>the {waitingOn}</strong>
-                                                )}
-                                                . Payment starts after they confirm.
-                                            </p>
-                                        </div>
-                                    ) : null}
-
                                     {tx.status === 'pending_acceptance' && view?.canAccept ? (
                                         <div className="txNextStep" role="status">
-                                            <p className="txNextStep-title">Review and confirm this transaction</p>
+                                            <p className="txNextStep-title">
+                                                {view.myRole === 'buyer'
+                                                    ? 'Confirm as the buyer'
+                                                    : 'Confirm as the seller'}
+                                            </p>
                                             <p className="txNextStep-text">
-                                                You are the {view.myRole}. Confirming agrees to the terms and moves this
-                                                deal to payment.
+                                                Both the buyer and the seller must agree before payment. Review the
+                                                terms, then confirm your side.
                                             </p>
                                         </div>
                                     ) : null}
 
-                                    {tx.status === 'awaiting_inspection' ? (
+                                    {tx.status === 'pending_acceptance' && view?.iAccepted ? (
                                         <div className="txNextStep" role="status">
-                                            <p className="txNextStep-title">Inspection</p>
+                                            <p className="txNextStep-title">
+                                                Waiting for the {waitingOn} to agree
+                                            </p>
                                             <p className="txNextStep-text">
-                                                Check the item. You have {days} calendar {dayLabel}.
+                                                You confirmed as the {view.myRole}. Payment unlocks only after the{' '}
+                                                {waitingOn} confirms too
+                                                {waitingParty?.email ? (
+                                                    <>
+                                                        {' '}
+                                                        (
+                                                        <a href={`mailto:${waitingParty.email}`}>
+                                                            {waitingParty.email}
+                                                        </a>
+                                                        )
+                                                    </>
+                                                ) : null}
+                                                .
+                                            </p>
+                                        </div>
+                                    ) : null}
+
+                                    {tx.status === 'awaiting_payment' && view?.myRole === 'buyer' ? (
+                                        <div className="txNextStep" role="status">
+                                            <p className="txNextStep-title">Your turn to pay</p>
+                                            <p className="txNextStep-text">
+                                                Both sides agreed. Fund the escrow so the seller can deliver.
+                                            </p>
+                                        </div>
+                                    ) : null}
+
+                                    {tx.status === 'awaiting_payment' && view?.myRole === 'seller' ? (
+                                        <div className="txNextStep" role="status">
+                                            <p className="txNextStep-title">Waiting for the buyer to pay</p>
+                                            <p className="txNextStep-text">
+                                                Both sides agreed. You deliver after the buyer funds this deal.
+                                            </p>
+                                        </div>
+                                    ) : null}
+
+                                    {tx.status === 'awaiting_inspection' && view?.myRole === 'buyer' ? (
+                                        <div className="txNextStep" role="status">
+                                            <p className="txNextStep-title">Inspect and approve</p>
+                                            <p className="txNextStep-text">
+                                                Check what you received. You have {days} calendar {dayLabel}.
+                                            </p>
+                                        </div>
+                                    ) : null}
+
+                                    {tx.status === 'awaiting_inspection' && view?.myRole === 'seller' ? (
+                                        <div className="txNextStep" role="status">
+                                            <p className="txNextStep-title">Buyer is inspecting</p>
+                                            <p className="txNextStep-text">
+                                                Stay reachable. Funds release when the buyer approves.
                                             </p>
                                         </div>
                                     ) : null}
@@ -645,9 +642,9 @@ export default function TransactionDetail() {
                                             </div>
 
                                             <div className="txSharePanel-copy">
-                                                <p className="txSharePanel-kicker">Invite {waitingOn}</p>
+                                                <p className="txSharePanel-kicker">Invite {view.counterRole}</p>
                                                 <p className="txSharePanel-title">
-                                                    Send this so the {waitingOn} can agree
+                                                    Send this so the {view.counterRole} can agree
                                                 </p>
                                                 <p className="txSharePanel-text">
                                                     Share with{' '}
@@ -656,9 +653,10 @@ export default function TransactionDetail() {
                                                             {view.counterparty.email}
                                                         </a>
                                                     ) : (
-                                                        <strong>the {waitingOn}</strong>
+                                                        <strong>the {view.counterRole}</strong>
                                                     )}
-                                                    . They must log in with that email to open this transaction.
+                                                    . They must log in with that email. Both of you must confirm
+                                                    before payment.
                                                 </p>
 
                                                 <div className="txSharePanel-linkRow">
@@ -753,10 +751,15 @@ export default function TransactionDetail() {
 
                                     {view?.canAccept ? (
                                         <div className="txActionPanel">
-                                            <p className="txActionPanel-title">Confirm transaction</p>
+                                            <p className="txActionPanel-title">
+                                                {view.myRole === 'buyer'
+                                                    ? 'Confirm as buyer'
+                                                    : 'Confirm as seller'}
+                                            </p>
                                             <p className="txActionPanel-text">
-                                                By confirming, you agree to the terms as the {view.myRole}. The deal
-                                                then moves to payment.
+                                                {view.myRole === 'buyer'
+                                                    ? 'You agree to the price, inspection period, and to pay Wassitna before delivery. The deal moves to payment only after the seller confirms too.'
+                                                    : 'You agree to deliver as described after the buyer pays. The deal moves to payment only after the buyer confirms too.'}
                                             </p>
                                             {actionError ? (
                                                 <p className="txActionPanel-error" role="alert">
@@ -771,6 +774,16 @@ export default function TransactionDetail() {
                                             >
                                                 {actionBusy ? 'Confirming…' : 'Confirm agreement'}
                                             </button>
+                                        </div>
+                                    ) : null}
+
+                                    {tx.status === 'pending_acceptance' && view?.iAccepted ? (
+                                        <div className="txActionPanel txActionPanel--quiet">
+                                            <p className="txActionPanel-title">You already confirmed</p>
+                                            <p className="txActionPanel-text">
+                                                Waiting for the {waitingOn} to confirm. Step 1 stays here until both
+                                                sides agree.
+                                            </p>
                                         </div>
                                     ) : null}
 
@@ -832,10 +845,15 @@ export default function TransactionDetail() {
 
                                     {tx.status === 'awaiting_payment' && !view?.canPay ? (
                                         <div className="txActionPanel txActionPanel--quiet">
-                                            <p className="txActionPanel-title">Waiting for payment</p>
+                                            <p className="txActionPanel-title">
+                                                {view?.myRole === 'seller'
+                                                    ? 'Waiting for buyer payment'
+                                                    : 'Waiting for payment'}
+                                            </p>
                                             <p className="txActionPanel-text">
-                                                The buyer can now fund this transaction. You will see the next step
-                                                here once payment is received.
+                                                {view?.myRole === 'seller'
+                                                    ? 'The buyer funds the escrow next. You will deliver after payment is received.'
+                                                    : 'Payment will show here once you can fund this deal.'}
                                             </p>
                                         </div>
                                     ) : null}

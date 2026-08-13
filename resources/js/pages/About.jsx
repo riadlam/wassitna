@@ -17,7 +17,7 @@ const principles = [
     },
     {
         title: 'Fees are published before you start',
-        text: 'Under 20,000 DA is free. Then 1.5% or 1%, with a hard cap at 200,000 DA. No surprise “processing” line at the end.',
+        text: 'Under 20,000 DA is free. Then 1.5% or 1% depending on the amount. No surprise “processing” line at the end.',
     },
     {
         title: 'Built in Algeria, for Algeria',
@@ -47,9 +47,9 @@ export default function About() {
                             reverses the payment. Escrow is the boring, fair middle.
                         </p>
                         <p>
-                            We are based in Algeria and launching locally first. That means a DA fee schedule,
-                            a 200,000 DA limit per transaction, and a process you can follow in five steps.
-                            We would rather be small and clear than loud and fake.
+                            We are based in Algeria and launching locally first. That means a DA fee schedule
+                            and a process you can follow in five steps. We would rather be small and clear than
+                            loud and fake.
                         </p>
                     </div>
 
@@ -63,8 +63,8 @@ export default function About() {
                             <span>Free under this amount</span>
                         </li>
                         <li>
-                            <strong>200,000 DA</strong>
-                            <span>Maximum per transaction</span>
+                            <strong>6 categories</strong>
+                            <span>Goods to accounts covered</span>
                         </li>
                         <li>
                             <strong>5 steps</strong>

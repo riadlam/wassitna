@@ -6,7 +6,6 @@ import { formatMoney } from '../fees';
 import {
     IconCalc,
     IconInfo,
-    IconLink,
     IconList,
     IconPhone,
     IconPlus,
@@ -22,7 +21,6 @@ const topNav = [
 const bottomNav = [
     { to: '/about', label: 'About Us', icon: IconList },
     { to: '/help', label: 'FAQ', icon: IconInfo },
-    { to: '/#partners', label: 'Partners', icon: IconLink },
     { to: '/contact', label: 'Contact Us', icon: IconPhone },
 ];
 

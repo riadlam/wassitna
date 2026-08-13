@@ -56,11 +56,27 @@ class TransactionResource extends JsonResource
 
         $party = $this->partyForUser($user);
         $isCreator = (int) $this->created_by === (int) $user->id;
+        $buyer = $this->parties->firstWhere('role', 'buyer');
+        $seller = $this->parties->firstWhere('role', 'seller');
+        $buyerAccepted = $buyer?->invite_status === 'accepted';
+        $sellerAccepted = $seller?->invite_status === 'accepted';
+
+        $waitingOn = null;
+        if ($this->status === 'pending_acceptance') {
+            if (! $buyerAccepted) {
+                $waitingOn = 'buyer';
+            } elseif (! $sellerAccepted) {
+                $waitingOn = 'seller';
+            }
+        }
 
         return [
             'role' => $party?->role,
             'is_creator' => $isCreator,
             'invite_status' => $party?->invite_status,
+            'buyer_accepted' => $buyerAccepted,
+            'seller_accepted' => $sellerAccepted,
+            'waiting_on' => $waitingOn,
             'can_accept' => $party !== null
                 && $this->status === 'pending_acceptance'
                 && $party->invite_status !== 'accepted'

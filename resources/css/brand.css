@@ -42,13 +42,76 @@ a.headerV2-primaryNav-title:focus {
     color: inherit;
 }
 
+.brandLogo {
+    display: block;
+    width: auto;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.brandLogoLockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brandLogo--header {
+    height: 36px;
+}
+
+.brandLogo--headerV3 {
+    height: 32px;
+}
+
+.brandLogo--app {
+    height: 36px;
+}
+
+.brandLogo--footer {
+    height: 32px;
+}
+
+.brandLogo--mark {
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
 .headerV2-logo .logo-wordmark,
 .defaultFooter-logo .logo-wordmark {
     display: inline-flex;
     align-items: center;
     gap: 0;
-    width: 153px;
-    height: 18px;
+    width: auto;
+    height: auto;
+}
+
+.headerV2-logo .logo-name,
+.defaultFooter-logo .logo-name,
+.appSidebar-logo .logo-name,
+.brandLogoLockup .logo-name {
+    font-family: Montserrat, Helvetica, Arial, 'Microsoft Yahei', STXihei, sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.logo-name--headerV3 {
+    font-size: 20px;
+}
+
+@media (max-width: 767px) {
+    .headerV2-logo .brandLogo--header {
+        height: 28px;
+    }
+
+    .headerV2-logo .logo-name {
+        font-size: 18px;
+    }
 }
 
 .headerV2-logo .logo-name,
@@ -399,6 +462,12 @@ a.headerV2-primaryNav-title:focus {
 
 .section-form .signup-link {
     padding-left: 1.6rem;
+    background: none;
+    border: 0;
+    color: #3cb95d;
+    cursor: pointer;
+    font: inherit;
+    text-decoration: underline;
 }
 
 .calculator-formService {
@@ -421,6 +490,23 @@ a.headerV2-primaryNav-title:focus {
 .calculator-formService .defaultSelect-select {
     cursor: pointer;
     text-align: left;
+}
+
+/* DA-only: keep flag + label look, no dropdown chrome / blue hover */
+.calculator-currency .calculator-currencyStatic:before {
+    display: none;
+}
+
+.calculator-currency .calculator-currencyStatic .defaultSelect-select,
+.calculator-currency .calculator-currencyStatic .defaultSelect-select:hover,
+.calculator-currency .calculator-currencyStatic .defaultSelect-select:focus,
+.calculator-currency .calculator-currencyStatic .defaultSelect-select:disabled,
+.calculator-currency .calculator-currencyStatic .defaultSelect-select:disabled:hover,
+.calculator-currency .calculator-currencyStatic .defaultSelect-select:disabled:focus {
+    color: #4f5759;
+    cursor: default;
+    opacity: 1;
+    -webkit-text-fill-color: #4f5759;
 }
 
 .calculator-formService .defaultSelect-menu {
@@ -1024,3 +1110,63 @@ header[data-header-type='simplified'] .headerV3-wordmark .logo-text--secondary {
     background-position: center;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 480'%3E%3Cpath fill='%23fff' d='M320 0h320v480H320z'/%3E%3Cpath fill='%23006233' d='M0 0h320v480H0z'/%3E%3Cpath fill='%23d21034' d='M424 180a120 120 0 1 0 0 120 96 96 0 1 1 0-120m4 60-108-35.2 67.2 90.5V184.6l-67.2 90.5z'/%3E%3C/svg%3E");
 }
+
+.verifyEmail-lead {
+    margin: 0 0 1.6rem;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    color: #4f5759;
+}
+
+.verifyEmail-code {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.verifyEmail-digit {
+    width: 100%;
+    max-width: 52px;
+    text-align: center;
+    font-size: 2rem !important;
+    font-weight: 700;
+    letter-spacing: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.verifyEmail-info {
+    margin: 0 0 1.2rem;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    background: #f0faf3;
+    border: 1px solid #c9ebd4;
+    color: #01426a;
+    font-size: 1.4rem;
+    line-height: 1.45;
+}
+
+.verifyEmail-resend,
+.verifyEmail-hint {
+    margin: 1.4rem 0 0;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: #4f5759;
+}
+
+.verifyEmail-logout {
+    display: inline;
+    padding-left: 0;
+}
+
+@media (max-width: 480px) {
+    .verifyEmail-code {
+        gap: 6px;
+    }
+
+    .verifyEmail-digit {
+        max-width: 44px;
+        font-size: 1.7rem !important;
+    }
+}
+

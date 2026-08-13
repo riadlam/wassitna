@@ -19,6 +19,7 @@ import StartTransaction from './pages/StartTransaction';
 import TransactionDetail from './pages/TransactionDetail';
 import Transactions from './pages/Transactions';
 import Withdrawals from './pages/Withdrawals';
+import VerifyEmail from './pages/VerifyEmail';
 
 createRoot(document.getElementById('app')).render(
     <StrictMode>
@@ -29,11 +30,18 @@ createRoot(document.getElementById('app')).render(
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
+                    <Route
+                        path="/verify-email"
+                        element={
+                            <RequireAuth>
+                                <VerifyEmail />
+                            </RequireAuth>
+                        }
+                    />
                     <Route path="/help" element={<Help />} />
                     <Route path="/partners" element={<ContentPage pageKey="partners" />} />
                     <Route path="/transaction-types" element={<ContentPage pageKey="transaction-types" />} />
                     <Route path="/transaction-types/domain-names" element={<ContentPage pageKey="domain-names" />} />
-                    <Route path="/transaction-types/motor-vehicles" element={<ContentPage pageKey="motor-vehicles" />} />
                     <Route path="/transaction-types/merchandise" element={<ContentPage pageKey="merchandise" />} />
                     <Route path="/transaction-types/milestone" element={<ContentPage pageKey="milestone" />} />
                     <Route path="/about" element={<About />} />

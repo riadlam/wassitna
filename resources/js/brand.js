@@ -92,13 +92,12 @@ export const touchShelfLinks = [
 ];
 
 export const footerServices = [
+    { label: 'Physical goods', to: '/transactions/start' },
+    { label: 'Electronics', to: '/transactions/start' },
+    { label: 'Digital products', to: '/transactions/start' },
+    { label: 'Services / freelance', to: '/transactions/start' },
     { label: 'Accounts', to: '/transactions/start' },
-    { label: 'Physical goods', to: '/transaction-types/merchandise' },
-    { label: 'Electronics', to: '/transaction-types/merchandise' },
-    { label: 'Digital products', to: '/transaction-types/merchandise' },
-    { label: 'Services / freelance', to: '/transaction-types/milestone' },
-    { label: 'Motor vehicles', to: '/transaction-types/motor-vehicles' },
-    { label: 'Domain names', to: '/transaction-types/domain-names' },
+    { label: 'Other', to: '/transactions/start' },
 ];
 
 export const footerSupport = [

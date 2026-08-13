@@ -34,15 +34,6 @@ export function AuthProvider({ children }) {
         () => ({
             user,
             ready,
-            login: async (payload) => {
-                const data = await api('/api/auth/login', {
-                    method: 'POST',
-                    body: { ...payload, device: 'spa' },
-                });
-                setToken(data.token);
-                setUser(data.user);
-                return data.user;
-            },
             register: async (payload) => {
                 const data = await api('/api/auth/register', {
                     method: 'POST',
@@ -50,7 +41,16 @@ export function AuthProvider({ children }) {
                 });
                 setToken(data.token);
                 setUser(data.user);
-                return data.user;
+                return data;
+            },
+            login: async (payload) => {
+                const data = await api('/api/auth/login', {
+                    method: 'POST',
+                    body: { ...payload, device: 'spa' },
+                });
+                setToken(data.token);
+                setUser(data.user);
+                return data;
             },
             logout: async () => {
                 try {

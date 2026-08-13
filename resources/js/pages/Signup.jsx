@@ -39,7 +39,7 @@ export default function Signup() {
         setBusy(true);
         try {
             await register({ email, phone, password });
-            navigate(next, { replace: true });
+            navigate('/verify-email', { replace: true, state: { from: next } });
         } catch (err) {
             setError(err);
         } finally {

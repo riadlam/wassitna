@@ -56,6 +56,11 @@ class User extends Authenticatable
         return ($this->status ?? 'active') === 'active';
     }
 
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->email_verified_at !== null;
+    }
+
     public function createdTransactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'created_by');

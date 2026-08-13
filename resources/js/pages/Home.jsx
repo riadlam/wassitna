@@ -4,10 +4,12 @@ import { brand } from '../brand';
 import Header from '../components/Header';
 import {
     HeroUpsellLogo,
-    UpsellDomains,
-    UpsellMerchandise,
-    UpsellMilestones,
-    UpsellVehicles,
+    UpsellAccounts,
+    UpsellDigital,
+    UpsellElectronics,
+    UpsellOther,
+    UpsellPhysical,
+    UpsellServices,
 } from '../components/HeroUpsellIcons';
 import { api } from '../api';
 import { calculateEscrowFee, formatMoney } from '../fees';
@@ -24,54 +26,74 @@ const CHECK_ICON = (
 
 const carouselSlides = [
     {
-        title: 'Buy or sell domains and websites securely',
-        note: 'A safer way to buy and sell domains between people you do not know yet',
-        icon: <UpsellDomains />,
-        domains: ['snapchat', 'uber', 'twitter', 'gmail', 'wechat'],
+        title: 'Buy or sell physical goods safely in Algeria',
+        note: 'Clothes, furniture, spare parts and everyday items — funds held until delivery is approved',
+        icon: <UpsellPhysical />,
         steps: [
             'Buyer and seller agree on terms',
             `Buyer pays ${brand.domain}`,
-            'Seller transfers the domain name',
-            'Buyer approves the domain name',
+            'Seller ships or hands over the item',
+            'Buyer inspects & approves',
             `${brand.domain} pays the seller`,
         ],
     },
     {
-        title: 'Buy or sell your vehicle safely and confidently',
+        title: 'Protect phone and electronics deals',
         note: null,
-        icon: <UpsellVehicles />,
-        domains: null,
+        icon: <UpsellElectronics />,
         steps: [
             'Buyer and seller agree on terms',
             `Buyer pays ${brand.domain}`,
-            'Seller ships the vehicle',
-            'Buyer inspects & approves vehicle',
+            'Seller delivers the device',
+            'Buyer inspects & approves',
             `${brand.domain} pays the seller`,
         ],
     },
     {
-        title: 'Complete protection for merchandise transactions',
+        title: 'Secure digital products and licenses',
         note: null,
-        icon: <UpsellMerchandise />,
-        domains: null,
+        icon: <UpsellDigital />,
         steps: [
             'Buyer and seller agree on terms',
             `Buyer pays ${brand.domain}`,
-            'Seller ships the merchandise',
-            'Buyer inspects & approves goods',
+            'Seller sends files or license',
+            'Buyer confirms access',
             `${brand.domain} pays the seller`,
         ],
     },
     {
-        title: 'Pay for services as you go with milestone payments',
+        title: 'Pay for freelance work when it is done',
         note: null,
-        icon: <UpsellMilestones />,
-        domains: null,
+        icon: <UpsellServices />,
         steps: [
-            'Buyer and seller agree on schedule',
+            'Buyer and seller agree on the work',
             `Buyer pays ${brand.domain}`,
-            'Seller provides the service',
-            'Buyer approves the milestone',
+            'Seller delivers the service',
+            'Buyer approves the result',
+            `${brand.domain} pays the seller`,
+        ],
+    },
+    {
+        title: 'Hand over gaming and social accounts safely',
+        note: null,
+        icon: <UpsellAccounts />,
+        steps: [
+            'Buyer and seller agree on terms',
+            `Buyer pays ${brand.domain}`,
+            'Seller sends the credentials',
+            'Buyer confirms login works',
+            `${brand.domain} pays the seller`,
+        ],
+    },
+    {
+        title: 'Escrow for any other deal you need',
+        note: null,
+        icon: <UpsellOther />,
+        steps: [
+            'Buyer and seller agree on terms',
+            `Buyer pays ${brand.domain}`,
+            'Seller delivers as agreed',
+            'Buyer inspects & approves',
             `${brand.domain} pays the seller`,
         ],
     },
@@ -87,40 +109,40 @@ const howSteps = [
 
 const siteFeatures = [
     {
-        icon: '/vendor/escrow/icons/feature-domain-names.svg',
-        title: 'Domain Names',
-        to: '/transaction-types/domain-names',
-        desc: `Use ${brand.domain} when buying or selling a domain name. Funds stay protected until the domain is transferred and the buyer approves.`,
-    },
-    {
-        icon: '/vendor/escrow/icons/feature-motor-vehicles.svg',
-        title: 'Motor Vehicles',
-        to: '/transaction-types/motor-vehicles',
-        desc: `Buying or selling a car in Algeria? ${brand.domain} holds the money until the vehicle is delivered and inspected, so neither side has to take the risk first.`,
+        icon: '/vendor/escrow/icons/feature-general-merchandise.svg',
+        title: 'Physical goods',
+        to: '/transactions/start',
+        desc: `Clothes, furniture, spare parts and more. ${brand.domain} holds the payment until the buyer receives and checks the item.`,
     },
     {
         icon: '/vendor/escrow/icons/feature-electronics.svg',
         title: 'Electronics',
-        to: '/transaction-types/merchandise',
-        desc: `Phones, laptops and other electronics are easy to dispute after payment. ${brand.domain} keeps the funds until the buyer has checked the item.`,
+        to: '/transactions/start',
+        desc: `Phones, laptops and gadgets. Funds stay with us until the buyer has inspected the device.`,
     },
     {
-        icon: '/vendor/escrow/icons/feature-general-merchandise.svg',
-        title: 'General Merchandise',
-        to: '/transaction-types/merchandise',
-        desc: `From spare parts to furniture and luxury goods, buy and sell with a local escrow process built for deals in DA.`,
+        icon: '/vendor/escrow/icons/feature-digital-products.svg',
+        title: 'Digital products',
+        to: '/transactions/start',
+        desc: `Files, licenses and downloads. The seller delivers, the buyer confirms, then we release payment.`,
     },
     {
         icon: '/vendor/escrow/icons/feature-milestone-transactions.svg',
-        title: 'Milestone Transactions',
-        to: '/transaction-types/milestone',
-        desc: `Paying for a service in stages? Release money only when each milestone is done and approved.`,
+        title: 'Services / freelance',
+        to: '/transactions/start',
+        desc: `Design, development, repairs and other work. Pay only when the agreed work is delivered and approved.`,
     },
     {
-        icon: '/vendor/escrow/icons/feature-jewelry-watches-and-fashion.svg',
-        title: 'Jewelry, Watches, and Fashion',
-        to: '/transaction-types/merchandise',
-        desc: `High-value jewelry is hard to verify from photos alone. ${brand.domain} holds payment until the buyer inspects the piece.`,
+        icon: '/vendor/escrow/icons/feature-accounts.svg',
+        title: 'Accounts',
+        to: '/transactions/start',
+        desc: `Gaming, Facebook, TikTok and other accounts. Credentials stay protected until the buyer confirms handover.`,
+    },
+    {
+        icon: '/vendor/escrow/icons/feature-other.svg',
+        title: 'Other',
+        to: '/transactions/start',
+        desc: `Anything else you need to buy or sell safely in Algeria. Same escrow steps, clear fees in DA.`,
     },
 ];
 
@@ -189,17 +211,6 @@ function HeroCarousel() {
                         {slide.note ? (
                             <footer className="sectionHero-upsell-footer">
                                 <p className="sectionHero-upsell-note">{slide.note}</p>
-                                <ul className="sectionHero-upsell-products">
-                                    {slide.domains.map((d) => (
-                                        <li
-                                            key={d}
-                                            className={`sectionHero-domainLogo sectionHero-domainLogo--${d} tooltip`}
-                                            data-tooltip={`${d}.com`}
-                                        >
-                                            <span className="is-accessibly-hidden">{d}.com</span>
-                                        </li>
-                                    ))}
-                                </ul>
                             </footer>
                         ) : null}
                     </div>
@@ -227,7 +238,6 @@ function HeroCalculator() {
     const [role, setRole] = useState('seller');
     const [category, setCategory] = useState('');
     const [price, setPrice] = useState('50000');
-    const [currency, setCurrency] = useState('DZD');
     const [showFee, setShowFee] = useState(false);
     const [busy, setBusy] = useState(false);
     const [categoryOpen, setCategoryOpen] = useState(false);
@@ -281,7 +291,7 @@ function HeroCalculator() {
                 role,
                 category,
                 price: String(feeResult.cappedAmount || price),
-                currency,
+                currency: 'DZD',
             },
         });
     };
@@ -311,7 +321,6 @@ function HeroCalculator() {
                                 >
                                     <option value="seller">Selling</option>
                                     <option value="buyer">Buying</option>
-                                    <option value="broker">Brokering</option>
                                 </select>
                             </div>
                         </div>
@@ -395,25 +404,17 @@ function HeroCalculator() {
                     </div>
                     <div className="field calculator-currency" data-field="currency">
                         <div className="field-input">
-                            <div className="defaultSelect defaultSelect--form defaultSelect--flags">
-                                <span
-                                    className="defaultSelect-flag"
-                                    data-select-value={currency === 'DZD' ? 'DZA' : currency}
-                                />
+                            <div className="defaultSelect defaultSelect--form defaultSelect--flags calculator-currencyStatic">
+                                <span className="defaultSelect-flag" data-select-value="DZA" aria-hidden="true" />
                                 <select
                                     className="defaultSelect-select"
                                     name="currency"
                                     id="field-currency"
-                                    value={currency}
-                                    onChange={(e) => {
-                                        setCurrency(e.target.value);
-                                        setShowFee(false);
-                                    }}
+                                    value="DZD"
+                                    disabled
+                                    aria-label="Currency: Algerian Dinar"
                                 >
                                     <option value="DZD">DA</option>
-                                    <option value="USD">USD</option>
-                                    <option value="EUR">Euro</option>
-                                    <option value="GBP">GBP</option>
                                 </select>
                             </div>
                         </div>
@@ -426,7 +427,7 @@ function HeroCalculator() {
                         Wassitna fee ({feeResult.rateLabel}):{' '}
                         <span className="calculator-fee-value">{formatMoney(feeResult.fee, 'DZD')}</span>
                         {feeResult.overCap ? (
-                            <span className="calculator-fee-cap"> · Max 200,000 DA</span>
+                            <span className="calculator-fee-cap"> · Fees shown before you start</span>
                         ) : null}
                     </p>
                 ) : null}
@@ -495,14 +496,8 @@ export default function Home() {
                     <ul className="reputation-inner">
                         <li className="reputation-item reputation-item--stats">
                             <div className="reputation-stats">
-                                <span className="reputation-stats-value">20,000 DA</span>
-                                <span className="reputation-stats-label">Free escrow under this amount</span>
-                            </div>
-                        </li>
-                        <li className="reputation-item reputation-item--stats">
-                            <div className="reputation-stats">
-                                <span className="reputation-stats-value">200,000 DA</span>
-                                <span className="reputation-stats-label">Maximum protected per deal</span>
+                                <span className="reputation-stats-value">6 categories</span>
+                                <span className="reputation-stats-label">Goods, electronics, digital, services, accounts</span>
                             </div>
                         </li>
                         <li className="reputation-item reputation-item--stats">
@@ -574,7 +569,7 @@ export default function Home() {
                         <header className="section-header">
                             <div className="sectionHeading services-title">
                                 <h2 className="sectionHeading-title" role="heading">
-                                    Safely buy and sell products and services, up to 200,000 DA
+                                    Safely buy and sell across our categories
                                 </h2>
                             </div>
                         </header>
@@ -683,9 +678,10 @@ export default function Home() {
                                 </div>
                                 <p className="apiIntroduction-desc">
                                     Agree a price first, then protect the payment. {brand.name} Offer is how
-                                    buyers and sellers settle on an amount for a car, domain, service or
-                                    merchandise — then move the deal into escrow on {brand.domain}. No API,
-                                    no extra software. Just a clear offer and a safe hold on the funds.
+                                    buyers and sellers settle on an amount for a domain, service, digital
+                                    product, account, or merchandise — then move the deal into escrow on{' '}
+                                    {brand.domain}. No API, no extra software. Just a clear offer and a safe
+                                    hold on the funds.
                                 </p>
                                 <Link to="/transactions/start" className="btn btn--secondary btn--hollow btn--large">
                                     Make an offer
@@ -725,7 +721,7 @@ export default function Home() {
                                 <p className="sectionHeading-subTitle">
                                     Buyer funds are held until both sides complete the deal. We are working
                                     toward the right local compliance as we grow. Until then we stay
-                                    transparent: clear fees in DA, a 200,000 DA cap, and a simple process you
+                                    transparent: clear fees in DA and a simple process you
                                     can follow from start to finish.
                                 </p>
                             </div>

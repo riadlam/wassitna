@@ -20,7 +20,7 @@ export const faqItems = [
         id: 'where-operate',
         category: 'basics',
         q: 'Where does Wassitna operate?',
-        a: 'We serve buyers and sellers in Algeria. Deals are in Algerian Dinar (DA), with a maximum of 200,000 DA per transaction.',
+        a: 'We serve buyers and sellers in Algeria. Deals are in Algerian Dinar (DA).',
     },
     {
         id: 'how-it-works',
@@ -32,7 +32,7 @@ export const faqItems = [
         id: 'who-can-use',
         category: 'basics',
         q: 'Who can start a transaction?',
-        a: 'Anyone with a Wassitna account can start a deal as buyer, seller, or broker. You invite the other party by email. They must log in and accept before the deal moves forward.',
+        a: 'Anyone with a Wassitna account can start a deal as buyer or seller. You invite the other party by email. They must log in and accept before the deal moves forward.',
     },
     {
         id: 'how-long',
@@ -56,7 +56,7 @@ export const faqItems = [
         id: 'fee-free',
         category: 'fees',
         q: 'Are there fees?',
-        a: 'Deals under 20,000 DA are free. From 20,000 to 100,000 DA the fee is 1.5%. Above 100,000 DA up to the 200,000 DA cap it is 1%. You see the fee before you start.',
+        a: 'Deals under 20,000 DA are free. From 20,000 to 100,000 DA the fee is 1.5%. Above 100,000 DA it is 1%. You see the fee before you start.',
     },
     {
         id: 'fee-payer',

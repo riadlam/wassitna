@@ -25,7 +25,7 @@ function UpsellBlock({ hiddenAtTablet = false, hiddenAtMobile = false }) {
                 <h3 className="headerV2-upsell-title">Start A Transaction With {brand.name}</h3>
                 {!hiddenAtMobile ? (
                     <p className="headerV2-upsell-desc">
-                        Sell, buy or broker anything from domain names to vehicles
+                        Sell or buy domains, services, digital products, accounts, and merchandise
                     </p>
                 ) : null}
             </div>

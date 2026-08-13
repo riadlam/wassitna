@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 export default function RequireAuth({ children }) {
     const { user, ready } = useAuth();
     const location = useLocation();
+    const path = `${location.pathname}${location.search}`;
 
     if (!ready) {
         return null;
@@ -14,7 +15,17 @@ export default function RequireAuth({ children }) {
             <Navigate
                 to="/login"
                 replace
-                state={{ from: `${location.pathname}${location.search}` }}
+                state={{ from: path }}
+            />
+        );
+    }
+
+    if (!user.email_verified && location.pathname !== '/verify-email') {
+        return (
+            <Navigate
+                to="/verify-email"
+                replace
+                state={{ from: path }}
             />
         );
     }

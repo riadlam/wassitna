@@ -21,8 +21,12 @@ export default function Login() {
         setError(null);
         setBusy(true);
         try {
-            await login({ login: identifier, password });
-            navigate(next, { replace: true });
+            const data = await login({ login: identifier, password });
+            if (data?.user && !data.user.email_verified) {
+                navigate('/verify-email', { replace: true, state: { from: next } });
+            } else {
+                navigate(next, { replace: true });
+            }
         } catch (err) {
             setError(err);
         } finally {

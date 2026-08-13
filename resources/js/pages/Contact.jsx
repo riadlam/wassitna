@@ -156,7 +156,7 @@ export default function Contact() {
                                     <br />
                                     <strong>Currency:</strong> Algerian Dinar (DA)
                                     <br />
-                                    <strong>Max deal size:</strong> 200,000 DA
+                                    <strong>Support:</strong> Email & WhatsApp
                                 </p>
                             </div>
                             <div className="trustPage-card trustPage-card--warn">

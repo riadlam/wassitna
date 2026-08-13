@@ -37,6 +37,10 @@
     text-decoration: none;
 }
 
+.appSidebar-logo .brandLogoLockup {
+    gap: 10px;
+}
+
 .appSidebar-logo .logo-name {
     color: #01426a;
     font-size: 22px;
@@ -44,22 +48,21 @@
 
 .appSidebar-logo .logo-primary {
     color: #01426a;
-    fill: #01426a;
 }
 
 .appSidebar-logo .logo-secondary {
     color: #3cb95d;
-    fill: #3cb95d;
 }
 
-.appAvatar .logo-primary,
-.appAvatar .logo-text--primary {
-    fill: #01426a;
+.appSidebar-logo .brandLogo {
+    height: 36px;
 }
 
-.appAvatar .logo-secondary,
-.appAvatar .logo-text--secondary {
-    fill: #3cb95d;
+.appAvatar .brandLogo {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    object-fit: cover;
 }
 
 .appSidebar-cta {

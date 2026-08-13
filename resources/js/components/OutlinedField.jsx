@@ -16,6 +16,7 @@ export default function OutlinedField({
     autoFocus = false,
     autoComplete,
     placeholder,
+    readOnly = false,
 }) {
     const id = useId();
     const rootRef = useRef(null);
@@ -166,6 +167,7 @@ export default function OutlinedField({
                         placeholder={placeholder}
                         autoFocus={autoFocus}
                         autoComplete={autoComplete}
+                        readOnly={readOnly}
                         onChange={onChange}
                         onFocus={() => setFocused(true)}
                         onBlur={(event) => {

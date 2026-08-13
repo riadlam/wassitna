@@ -9,28 +9,25 @@ const pages = {
         desc: 'Add escrow to your marketplace, broker workflow, or classifieds site in Algeria.',
         body: [
             { heading: 'Marketplaces', text: 'Protect high-value sales with Wassitna Pay or our API as we expand.' },
-            { heading: 'Brokers', text: 'Run vehicle, domain, and service deals with a neutral party holding funds in DA.' },
+            { heading: 'Brokers', text: 'Run domain, service, and merchandise deals with a neutral party holding funds in DA.' },
         ],
     },
     'transaction-types': {
-        title: 'Transaction Types',
-        desc: 'Use Wassitna for accounts, vehicles, merchandise, services and more — across Algeria.',
+        title: 'Categories',
+        desc: 'Use Wassitna for physical goods, electronics, digital products, services, accounts and more.',
         body: [
-            { heading: 'Accounts & digital goods', text: 'Social, gaming, and online accounts with delivery and inspection built in.' },
-            { heading: 'Motor Vehicles', text: 'Secure payment before handover or shipping between wilayas.' },
-            { heading: 'Merchandise', text: 'Protection for goods sent by courier or agreed delivery.' },
-            { heading: 'Milestone', text: 'Release funds only when each stage of a service is approved.' },
+            { heading: 'Physical goods', text: 'Clothes, furniture, spare parts and everyday items with delivery and inspection.' },
+            { heading: 'Electronics', text: 'Phones, laptops and gadgets — funds held until the buyer checks the device.' },
+            { heading: 'Digital products', text: 'Files, licenses and downloads with confirmation before payout.' },
+            { heading: 'Services / freelance', text: 'Release payment when the agreed work is delivered and approved.' },
+            { heading: 'Accounts', text: 'Gaming, Facebook, TikTok and similar account handovers.' },
+            { heading: 'Other', text: 'Anything else you need to trade safely in Algeria.' },
         ],
     },
     'domain-names': {
         title: 'Domain Names',
         desc: 'Buy or sell domains and websites securely.',
         body: [{ heading: 'How it works', text: `Agree on terms, the buyer pays ${brand.domain}, the seller transfers the domain, the buyer approves, then we pay the seller.` }],
-    },
-    'motor-vehicles': {
-        title: 'Motor Vehicles',
-        desc: 'Buy or sell your vehicle safely and confidently.',
-        body: [{ heading: 'How it works', text: 'Funds are secured before the vehicle changes hands. The buyer inspects, then Wassitna pays the seller.' }],
     },
     merchandise: {
         title: 'General Merchandise',
@@ -56,7 +53,7 @@ const pages = {
         body: [
             { heading: 'Under 20,000 DA', text: 'Free — no Wassitna fee.' },
             { heading: '20,000 – 100,000 DA', text: '1.5% escrow fee.' },
-            { heading: '100,000 – 200,000 DA', text: '1% escrow fee. Transactions are capped at 200,000 DA.' },
+            { heading: 'Over 100,000 DA', text: '1% escrow fee.' },
         ],
     },
     security: {
@@ -71,12 +68,12 @@ const pages = {
         title: 'Legal & compliance',
         desc: 'Who we are and what we do not claim.',
         body: [
-            { heading: 'Operating in Algeria', text: `${brand.name} is an Algerian company. We hold buyer funds until both sides complete the deal, with clear fees in DA and a 200,000 DA cap per transaction.` },
+            { heading: 'Operating in Algeria', text: `${brand.name} is an Algerian company. We hold buyer funds until both sides complete the deal, with clear fees in DA.` },
             { heading: 'As we grow', text: 'We are working toward the right local compliance and payment partners. Until then, our process stays simple and transparent.' },
         ],
     },
     pay: { title: 'Wassitna Pay', desc: 'Secure payments for your site.', body: [{ heading: 'Integrate', text: 'Add escrow checkout to your website, app, or marketplace as our API rolls out.' }] },
-    offer: { title: 'Wassitna Offer', desc: 'Agree a price, then close with escrow.', body: [{ heading: 'Make Offer', text: 'Settle on an amount for a car, domain, or service — then move the deal into escrow on Wassitna.' }] },
+    offer: { title: 'Wassitna Offer', desc: 'Agree a price, then close with escrow.', body: [{ heading: 'Make Offer', text: 'Settle on an amount for a domain, service, digital product, account, or merchandise — then move the deal into escrow on Wassitna.' }] },
     api: { title: 'Wassitna API', desc: 'Escrow for developers.', body: [{ heading: 'Developers', text: 'Integrate protected payments as simply as other checkout methods — coming as we scale in Algeria.' }] },
     terms: { title: 'Terms of Use', desc: `The agreement between you and ${brand.domain}.`, body: [{ heading: 'Overview', text: 'By using Wassitna you agree to our transaction rules, acceptable use, and fee schedule for deals in Algeria.' }] },
     privacy: { title: 'Privacy Policy', desc: 'How we collect and use your information.', body: [{ heading: 'Your data', text: 'We use account and transaction data to operate escrow, process withdrawals, and meet legal requirements in Algeria.' }] },

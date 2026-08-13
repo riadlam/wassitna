@@ -10,14 +10,6 @@ import useCategories, { categoryLabel } from '../hooks/useCategories';
 const roles = [
     { value: 'buyer', label: 'Buyer' },
     { value: 'seller', label: 'Seller' },
-    { value: 'broker', label: 'Broker' },
-];
-
-const currencies = [
-    { value: 'dzd', label: 'DZD', symbol: 'DA ' },
-    { value: 'usd', label: 'USD', symbol: '$' },
-    { value: 'eur', label: 'EUR', symbol: '€' },
-    { value: 'gbp', label: 'GBP', symbol: '£' },
 ];
 
 const feePayers = [
@@ -25,25 +17,6 @@ const feePayers = [
     { value: 'seller', label: 'Seller' },
     { value: 'split', label: '50 / 50' },
 ];
-
-
-const warningIcon = (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.1"
-        className="icon icon--warning"
-        width="22.5"
-        height="20"
-        viewBox="0 0 22.5 20"
-        aria-hidden="true"
-    >
-        <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="M20.6,20H1.9c-1,0-1.9-0.8-1.9-1.9c0-0.3,0.1-0.7,0.2-0.9L9.6,0.9  C9.9,0.4,10.6,0,11.2,0s1.3,0.4,1.6,0.9l9.4,16.2c0.2,0.3,0.2,0.6,0.2,0.9C22.5,19.2,21.7,20,20.6,20z M11.3,1.9L11.3,1.9L11.3,1.9  L1.9,18.1l18.8,0L11.3,1.9z M11.2,13.7c0.7,0,1.2,0.6,1.2,1.2s-0.6,1.2-1.2,1.2S10,15.7,10,15S10.6,13.7,11.2,13.7z M11.9,12  c0,0.3-0.3,0.5-0.6,0.5s-0.6-0.2-0.6-0.5L10,8.3c0-0.1,0-0.1,0-0.2c0-0.7,0.6-1.2,1.2-1.2s1.2,0.6,1.2,1.2c0,0.1,0,0.1,0,0.2  L11.9,12z"
-        />
-    </svg>
-);
 
 const checkboxBlank = (
     <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
@@ -59,15 +32,7 @@ const checkboxChecked = (
 
 function mapIncomingRole(role) {
     if (role === 'buying' || role === 'buyer') return 'buyer';
-    if (role === 'brokering' || role === 'broker') return 'broker';
     return 'seller';
-}
-
-function money(amount, symbol, currencyLabel) {
-    if (currencyLabel === 'DZD' || symbol.includes('DA')) {
-        return formatMoney(amount, 'DZD');
-    }
-    return `${symbol}${Number(amount).toFixed(2)}`;
 }
 
 export default function StartTransaction() {
@@ -78,7 +43,6 @@ export default function StartTransaction() {
 
     const [title, setTitle] = useState(incoming.what || '');
     const [role, setRole] = useState(mapIncomingRole(incoming.role));
-    const [currency, setCurrency] = useState((incoming.currency || 'DZD').toLowerCase());
     const [inspectionPeriod, setInspectionPeriod] = useState('1');
     const [category, setCategory] = useState(incoming.category || '');
     const [itemName, setItemName] = useState(incoming.what || '');
@@ -86,17 +50,14 @@ export default function StartTransaction() {
     const [description, setDescription] = useState('');
     const [items, setItems] = useState([]);
     const [titleTouched, setTitleTouched] = useState(false);
-    const [emailSent, setEmailSent] = useState(false);
     const [feePayer, setFeePayer] = useState('buyer');
     const [showFeeHelp, setShowFeeHelp] = useState(false);
     const [partyEmail, setPartyEmail] = useState('');
     const [partyPhone, setPartyPhone] = useState('+213');
-    const [buyerEmail, setBuyerEmail] = useState('');
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState('');
 
-    const currencyMeta = currencies.find((item) => item.value === currency) || currencies[0];
     const titleError = titleTouched && !title.trim();
     const canAddItem = Boolean(category && itemName.trim() && Number(price) > 0);
     const hasItems = items.length > 0;
@@ -106,11 +67,7 @@ export default function StartTransaction() {
     const feeInfo = calculateEscrowFee(subtotal);
     const summary = applyFeePayer(feeInfo.cappedAmount, feeInfo.fee, feePayer);
     const counterparty = role === 'seller' ? 'Buyer' : 'Seller';
-    const canSubmit =
-        hasItems &&
-        title.trim() &&
-        agreeTerms &&
-        (role === 'broker' ? partyEmail.includes('@') && buyerEmail.includes('@') : partyEmail.includes('@'));
+    const canSubmit = hasItems && title.trim() && agreeTerms && partyEmail.includes('@');
 
     const categoryOptions = useMemo(
         () => categories.map((item) => ({ value: item.slug, label: item.name })),
@@ -118,7 +75,7 @@ export default function StartTransaction() {
     );
 
     function formatAmount(value) {
-        return money(value, currencyMeta.symbol, currencyMeta.label);
+        return formatMoney(value, 'DZD');
     }
 
     function addItem() {
@@ -160,13 +117,12 @@ export default function StartTransaction() {
                 body: {
                     title: title.trim(),
                     role,
-                    currency: currencyMeta.label,
+                    currency: 'DZD',
                     inspection_period_days: days,
                     fee_payer: feePayer,
                     terms_accepted: true,
                     party_email: partyEmail.trim(),
                     party_phone: partyPhone,
-                    buyer_email: role === 'broker' ? buyerEmail.trim() : undefined,
                     items: items.map((item) => ({
                         category: item.category,
                         name: item.name,
@@ -193,37 +149,6 @@ export default function StartTransaction() {
             <HeaderV3Simplified />
             <main>
                 <div data-container="spa" id="spa">
-                    <div className="announcement announcement--warning announcement--icon headerV3-announcement--warning">
-                        <div className="announcement-container">
-                            <div className="announcement-content">
-                                <span className="announcement-icon">
-                                    <div>{warningIcon}</div>
-                                </span>
-                                <span className="announcement-title">Please verify your email address</span>
-                                <div className="announcement-extra">
-                                    <span>
-                                        Verify your email address to confirm that this account belongs to you. Haven&apos;t
-                                        received a verification email?{' '}
-                                    </span>
-                                    <a
-                                        role="button"
-                                        tabIndex={0}
-                                        className="headerV3-announcement-link"
-                                        onClick={() => setEmailSent(true)}
-                                        onKeyDown={(event) => {
-                                            if (event.key === 'Enter' || event.key === ' ') {
-                                                event.preventDefault();
-                                                setEmailSent(true);
-                                            }
-                                        }}
-                                    >
-                                        {emailSent ? 'Verification email sent' : 'Send verification email'}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div className="createTransaction section--mid">
                         <div className="section-container section--small createTransaction-form--container">
                             <form
@@ -260,10 +185,9 @@ export default function StartTransaction() {
                                             <OutlinedField
                                                 label="Currency"
                                                 name="currency"
-                                                select
-                                                options={currencies}
-                                                value={currency}
-                                                onChange={(event) => setCurrency(event.target.value)}
+                                                value="DA"
+                                                readOnly
+                                                onChange={() => {}}
                                             />
                                         </div>
                                         <div className="createTransaction-inline-field--narrow">
@@ -356,10 +280,10 @@ export default function StartTransaction() {
                                                 </div>
                                                 <div className="createTransaction-inline-field--half">
                                                     <OutlinedField
-                                                        label={`Price (${currencyMeta.label})`}
+                                                        label="Price (DA)"
                                                         name="items[0].price"
                                                         type="number"
-                                                        prefix={currencyMeta.symbol}
+                                                        prefix="DA "
                                                         value={price}
                                                         onChange={(event) => setPrice(event.target.value)}
                                                         onBlur={() => {
@@ -477,29 +401,12 @@ export default function StartTransaction() {
                                                 </div>
                                             </div>
                                             <div className="materialUI-box-content-italic createTransaction-fee-total-description">
-                                                All prices are in {currencyMeta.label}. Taxes may apply.
+                                                All prices are in DA. Taxes may apply.
                                             </div>
                                         </div>
 
                                         <div className="createTransaction-check-container">
-                                            {role === 'broker' ? (
-                                                <>
-                                                    <div className="createTransaction-subform--header">Buyer details</div>
-                                                    <div className="createTransaction-inline-fields-container">
-                                                        <div className="createTransaction-inline-field--half">
-                                                            <OutlinedField
-                                                                label="Email"
-                                                                name="buyerEmail"
-                                                                value={buyerEmail}
-                                                                onChange={(event) => setBuyerEmail(event.target.value)}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="createTransaction-subform--header">Seller details</div>
-                                                </>
-                                            ) : (
-                                                <div className="createTransaction-subform--header">{counterparty} details</div>
-                                            )}
+                                            <div className="createTransaction-subform--header">{counterparty} details</div>
                                             <div className="createTransaction-inline-fields-container">
                                                 <div className="createTransaction-inline-field--half">
                                                     <OutlinedField

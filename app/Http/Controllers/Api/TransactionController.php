@@ -84,7 +84,7 @@ class TransactionController extends Controller
                 'fee_rate' => $feeCalc['rate'],
                 'buyer_total' => $totals['buyer_total'],
                 'seller_proceeds' => $totals['seller_proceeds'],
-                'terms_accepted_at' => now(),
+                'terms_accepted_at' => null,
             ]);
 
             foreach (array_values($data['items']) as $index => $item) {
@@ -135,9 +135,13 @@ class TransactionController extends Controller
                 'invite_status' => 'accepted',
             ]);
 
-            $transaction->update([
-                'status' => 'awaiting_payment',
-            ]);
+            $fresh = $transaction->fresh(['parties']);
+            if ($this->buyerAndSellerAccepted($fresh)) {
+                $fresh->update([
+                    'status' => 'awaiting_payment',
+                    'terms_accepted_at' => now(),
+                ]);
+            }
         });
 
         return (new TransactionResource($transaction->fresh(['items', 'parties'])))->response();
@@ -241,7 +245,7 @@ class TransactionController extends Controller
             'user_id' => $user->id,
             'email' => $user->email,
             'phone' => $user->phone,
-            'invite_status' => 'accepted',
+            'invite_status' => 'pending',
         ]);
 
         if ($role === 'broker') {
@@ -278,6 +282,19 @@ class TransactionController extends Controller
     private function findUserIdByEmail(string $email): ?int
     {
         return User::query()->where('email', strtolower($email))->value('id');
+    }
+
+    private function buyerAndSellerAccepted(Transaction $transaction): bool
+    {
+        $parties = $transaction->relationLoaded('parties')
+            ? $transaction->parties
+            : $transaction->parties()->get();
+
+        $buyer = $parties->firstWhere('role', 'buyer');
+        $seller = $parties->firstWhere('role', 'seller');
+
+        return $buyer?->invite_status === 'accepted'
+            && $seller?->invite_status === 'accepted';
     }
 
     private function claimParty(Transaction $transaction, User $user): void
