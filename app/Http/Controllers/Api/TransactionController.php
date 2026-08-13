@@ -10,6 +10,7 @@ use App\Http\Requests\Api\StoreTransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Support\DealMailService;
 use App\Support\FeeCalculator;
 use App\Support\PhoneNormalizer;
 use App\Support\WalletService;
@@ -20,6 +21,10 @@ use Illuminate\Validation\ValidationException;
 
 class TransactionController extends Controller
 {
+    public function __construct(
+        private readonly DealMailService $dealMail,
+    ) {}
+
     public function index(Request $request): JsonResponse
     {
         $this->authorize('viewAny', Transaction::class);
@@ -100,8 +105,10 @@ class TransactionController extends Controller
 
             $this->createParties($transaction, $user, $data);
 
-            return $transaction->load(['items', 'parties']);
+            return $transaction->load(['items', 'parties.user', 'creator']);
         });
+
+        $this->dealMail->sendTransactionOpened($transaction);
 
         return (new TransactionResource($transaction))
             ->response()
@@ -159,7 +166,8 @@ class TransactionController extends Controller
             'status' => 'awaiting_delivery',
         ]);
 
-        $fresh = $transaction->fresh(['items', 'parties']);
+        $fresh = $transaction->fresh(['items', 'parties.user']);
+        $this->dealMail->sendPaymentReceived($fresh);
 
         return (new TransactionResource($fresh))->additional([
             'payment' => [
@@ -225,8 +233,12 @@ class TransactionController extends Controller
                 $wallet->creditSellerOnComplete($locked);
             }
 
-            return $locked->fresh(['items', 'parties']);
+            return $locked->fresh(['items', 'parties.user']);
         });
+
+        if ($action === 'approve') {
+            $this->dealMail->sendTransactionCompleted($fresh);
+        }
 
         return (new TransactionResource($fresh))->response();
     }

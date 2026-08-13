@@ -18,6 +18,8 @@ export default function PhoneField({ value, onChange }) {
                 inputProps={{
                     name: 'phone',
                     autoComplete: 'tel',
+                    enterKeyHint: 'done',
+                    inputMode: 'tel',
                     onFocus: () => setFocused(true),
                     onBlur: () => setFocused(false),
                 }}

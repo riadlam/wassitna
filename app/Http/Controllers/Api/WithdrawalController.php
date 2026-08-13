@@ -8,12 +8,17 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\WithdrawalResource;
 use App\Models\Transaction;
 use App\Models\Withdrawal;
+use App\Support\DealMailService;
 use App\Support\WalletService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class WithdrawalController extends Controller
 {
+    public function __construct(
+        private readonly DealMailService $dealMail,
+    ) {}
+
     public function index(Request $request): JsonResponse
     {
         $this->authorize('viewAny', Withdrawal::class);
@@ -68,8 +73,13 @@ class WithdrawalController extends Controller
             $transaction,
         );
 
+        $this->dealMail->sendWithdrawalRequested(
+            $request->user(),
+            $withdrawal->load('transaction'),
+        );
+
         return response()->json([
-            'data' => new WithdrawalResource($withdrawal->load('transaction')),
+            'data' => new WithdrawalResource($withdrawal),
             'user' => new UserResource($request->user()->fresh()),
         ], 201);
     }

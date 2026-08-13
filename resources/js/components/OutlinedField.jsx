@@ -17,6 +17,9 @@ export default function OutlinedField({
     autoComplete,
     placeholder,
     readOnly = false,
+    inputMode,
+    enterKeyHint,
+    pattern,
 }) {
     const id = useId();
     const rootRef = useRef(null);
@@ -95,12 +98,14 @@ export default function OutlinedField({
                             }`}
                             aria-haspopup="listbox"
                             aria-expanded={menuOpen}
-                            onClick={() => {
+                            onClick={(event) => {
+                                event.preventDefault();
                                 setMenuOpen((open) => !open);
                                 setFocused(true);
                             }}
                             onBlur={(event) => {
                                 if (rootRef.current?.contains(event.relatedTarget)) return;
+                                // iOS: keep menu open until outside pointerdown closes it
                                 setFocused(false);
                                 onBlur?.(event);
                             }}
@@ -130,6 +135,7 @@ export default function OutlinedField({
                                                         ? 'MuiMenuItem-root is-selected'
                                                         : 'MuiMenuItem-root'
                                                 }
+                                                onMouseDown={(event) => event.preventDefault()}
                                                 onClick={() => {
                                                     onChange?.({ target: { name, value: option.value } });
                                                     setMenuOpen(false);
@@ -149,6 +155,7 @@ export default function OutlinedField({
                         name={name}
                         className="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline"
                         value={value}
+                        enterKeyHint={enterKeyHint}
                         onChange={onChange}
                         onFocus={() => setFocused(true)}
                         onBlur={(event) => {
@@ -168,6 +175,9 @@ export default function OutlinedField({
                         autoFocus={autoFocus}
                         autoComplete={autoComplete}
                         readOnly={readOnly}
+                        inputMode={inputMode}
+                        enterKeyHint={enterKeyHint}
+                        pattern={pattern}
                         onChange={onChange}
                         onFocus={() => setFocused(true)}
                         onBlur={(event) => {

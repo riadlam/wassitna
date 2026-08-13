@@ -6,17 +6,12 @@ import PhoneField from '../components/PhoneField';
 import { api, firstError } from '../api';
 import { applyFeePayer, calculateEscrowFee, feeScheduleCopy, formatMoney } from '../fees';
 import useCategories, { categoryLabel } from '../hooks/useCategories';
+import { useAuth } from '../context/AuthContext';
 import { clearStartTxDraft, readStartTxDraft } from '../startTxDraft';
 
 const roles = [
     { value: 'buyer', label: 'Buyer' },
     { value: 'seller', label: 'Seller' },
-];
-
-const feePayers = [
-    { value: 'buyer', label: 'Buyer' },
-    { value: 'seller', label: 'Seller' },
-    { value: 'split', label: '50 / 50' },
 ];
 
 const checkboxBlank = (
@@ -41,9 +36,26 @@ function mergeIncoming(locationState) {
     return { ...draft, ...(locationState || {}) };
 }
 
+function emailsMatch(a, b) {
+    return String(a || '')
+        .trim()
+        .toLowerCase() ===
+        String(b || '')
+            .trim()
+            .toLowerCase();
+}
+
+function preventIosEnterSubmit(event) {
+    if (event.key !== 'Enter') return;
+    const tag = String(event.target?.tagName || '').toUpperCase();
+    if (tag === 'TEXTAREA' || tag === 'BUTTON') return;
+    event.preventDefault();
+}
+
 export default function StartTransaction() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const incoming = mergeIncoming(location.state);
     const { categories } = useCategories();
 
@@ -56,7 +68,6 @@ export default function StartTransaction() {
     const [description, setDescription] = useState('');
     const [items, setItems] = useState([]);
     const [titleTouched, setTitleTouched] = useState(false);
-    const [feePayer, setFeePayer] = useState('buyer');
     const [showFeeHelp, setShowFeeHelp] = useState(false);
     const [partyEmail, setPartyEmail] = useState('');
     const [partyPhone, setPartyPhone] = useState('+213');
@@ -64,7 +75,9 @@ export default function StartTransaction() {
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState('');
 
+    const feePayer = 'buyer';
     const titleError = titleTouched && !title.trim();
+    const partyEmailSameAsUser = Boolean(user?.email && partyEmail.includes('@') && emailsMatch(partyEmail, user.email));
     const canAddItem = Boolean(category && itemName.trim() && Number(price) > 0);
     const hasItems = items.length > 0;
     const days = Math.max(1, Number(inspectionPeriod) || 1);
@@ -73,7 +86,12 @@ export default function StartTransaction() {
     const feeInfo = calculateEscrowFee(subtotal);
     const summary = applyFeePayer(feeInfo.cappedAmount, feeInfo.fee, feePayer);
     const counterparty = role === 'seller' ? 'Buyer' : 'Seller';
-    const canSubmit = hasItems && title.trim() && agreeTerms && partyEmail.includes('@');
+    const canSubmit =
+        hasItems &&
+        title.trim() &&
+        agreeTerms &&
+        partyEmail.includes('@') &&
+        !partyEmailSameAsUser;
 
     const categoryOptions = useMemo(
         () => categories.map((item) => ({ value: item.slug, label: item.name })),
@@ -115,6 +133,10 @@ export default function StartTransaction() {
     async function onSubmit(event) {
         event.preventDefault();
         if (!canSubmit || submitting) return;
+        if (partyEmailSameAsUser) {
+            setSubmitError('Use a different email — you cannot invite yourself.');
+            return;
+        }
         setSubmitting(true);
         setSubmitError('');
         try {
@@ -125,7 +147,7 @@ export default function StartTransaction() {
                     role,
                     currency: 'DZD',
                     inspection_period_days: days,
-                    fee_payer: feePayer,
+                    fee_payer: 'buyer',
                     terms_accepted: true,
                     party_email: partyEmail.trim(),
                     party_phone: partyPhone,
@@ -162,6 +184,7 @@ export default function StartTransaction() {
                                 name="StartTransactionV3"
                                 data-tracking-section="StartTransactionV3"
                                 onSubmit={onSubmit}
+                                onKeyDown={preventIosEnterSubmit}
                             >
                                 <div>
                                     <div className="createTransaction-title">Start Transaction</div>
@@ -173,6 +196,7 @@ export default function StartTransaction() {
                                         value={title}
                                         error={titleError}
                                         helperText={titleError ? 'Required' : undefined}
+                                        enterKeyHint="done"
                                         onChange={(event) => setTitle(event.target.value)}
                                         onBlur={() => setTitleTouched(true)}
                                     />
@@ -190,21 +214,17 @@ export default function StartTransaction() {
                                         </div>
                                         <div className="createTransaction-inline-field--narrow">
                                             <OutlinedField
-                                                label="Currency"
-                                                name="currency"
-                                                value="DA"
-                                                readOnly
-                                                onChange={() => {}}
-                                            />
-                                        </div>
-                                        <div className="createTransaction-inline-field--narrow">
-                                            <OutlinedField
                                                 label="Inspection period (days)"
                                                 name="inspectionPeriod"
-                                                type="number"
+                                                type="text"
+                                                inputMode="numeric"
+                                                pattern="[0-9]*"
+                                                enterKeyHint="done"
                                                 value={inspectionPeriod}
                                                 helperText=""
-                                                onChange={(event) => setInspectionPeriod(event.target.value)}
+                                                onChange={(event) =>
+                                                    setInspectionPeriod(event.target.value.replace(/[^\d]/g, ''))
+                                                }
                                             />
                                         </div>
                                     </div>
@@ -282,6 +302,7 @@ export default function StartTransaction() {
                                                         name="items[0].name"
                                                         value={itemName}
                                                         autoFocus
+                                                        enterKeyHint="done"
                                                         onChange={(event) => setItemName(event.target.value)}
                                                     />
                                                 </div>
@@ -289,10 +310,14 @@ export default function StartTransaction() {
                                                     <OutlinedField
                                                         label="Price (DA)"
                                                         name="items[0].price"
-                                                        type="number"
+                                                        type="text"
+                                                        inputMode="decimal"
+                                                        enterKeyHint="done"
                                                         prefix="DA "
                                                         value={price}
-                                                        onChange={(event) => setPrice(event.target.value)}
+                                                        onChange={(event) =>
+                                                            setPrice(event.target.value.replace(/[^\d.]/g, ''))
+                                                        }
                                                         onBlur={() => {
                                                             const next = Number(price);
                                                             setPrice(Number.isFinite(next) ? next.toFixed(2) : '0.00');
@@ -354,36 +379,7 @@ export default function StartTransaction() {
                                                 </div>
                                                 <div className="createTransaction-fee">
                                                     <div className="createTransaction-fee-text">
-                                                        <div className="createTransaction-check-inline">
-                                                            <div className="createTransaction-check-inline">
-                                                                Escrow fee paid by:{' '}
-                                                            </div>
-                                                            <div className="createTransaction-check-inline">
-                                                                <div className="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary feePayerSelect">
-                                                                    <select
-                                                                        name="escrowFeePayer"
-                                                                        id="mui-component-select-escrowFeePayer"
-                                                                        className="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input"
-                                                                        value={feePayer}
-                                                                        onChange={(event) => setFeePayer(event.target.value)}
-                                                                    >
-                                                                        {feePayers.map((option) => (
-                                                                            <option key={option.value} value={option.value}>
-                                                                                {option.label}
-                                                                            </option>
-                                                                        ))}
-                                                                    </select>
-                                                                    <svg
-                                                                        className="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconStandard"
-                                                                        focusable="false"
-                                                                        aria-hidden="true"
-                                                                        viewBox="0 0 24 24"
-                                                                    >
-                                                                        <path d="M7 10l5 5 5-5z" />
-                                                                    </svg>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        <span>Escrow fee paid by Buyer</span>:
                                                     </div>
                                                     <div className="createTransaction-fee-text createTransaction-fee-amount">
                                                         <span>{formatAmount(summary.fee)}</span>
@@ -408,7 +404,7 @@ export default function StartTransaction() {
                                                 </div>
                                             </div>
                                             <div className="materialUI-box-content-italic createTransaction-fee-total-description">
-                                                All prices are in DA. Taxes may apply.
+                                                All prices are in DA.
                                             </div>
                                         </div>
 
@@ -419,7 +415,16 @@ export default function StartTransaction() {
                                                     <OutlinedField
                                                         label="Email"
                                                         name={role === 'seller' ? 'buyerEmail' : 'sellerEmail'}
+                                                        type="email"
+                                                        autoComplete="email"
+                                                        enterKeyHint="done"
                                                         value={partyEmail}
+                                                        error={partyEmailSameAsUser}
+                                                        helperText={
+                                                            partyEmailSameAsUser
+                                                                ? 'Use a different email — you cannot invite yourself.'
+                                                                : undefined
+                                                        }
                                                         onChange={(event) => setPartyEmail(event.target.value)}
                                                     />
                                                 </div>
@@ -509,7 +514,7 @@ export default function StartTransaction() {
                                     </li>
                                 ))}
                             </ul>
-                            Who pays the fee changes the buyer price and seller proceeds.
+                            The buyer pays the Wassitna fee. Buyer price includes the fee; seller proceeds are the item total.
                         </div>
                         <div className="createTransaction-fee-modal-button">
                             <button type="button" className="btn btn--secondary" onClick={() => setShowFeeHelp(false)}>
