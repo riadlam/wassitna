@@ -176,10 +176,15 @@ export default function OutlinedField({
                         autoComplete={autoComplete}
                         readOnly={readOnly}
                         inputMode={inputMode}
-                        enterKeyHint={enterKeyHint}
+                        enterKeyHint={enterKeyHint || 'done'}
                         pattern={pattern}
                         onChange={onChange}
                         onFocus={() => setFocused(true)}
+                        onKeyDown={(event) => {
+                            if (event.key !== 'Enter') return;
+                            event.preventDefault();
+                            event.currentTarget.blur();
+                        }}
                         onBlur={(event) => {
                             setFocused(false);
                             onBlur?.(event);

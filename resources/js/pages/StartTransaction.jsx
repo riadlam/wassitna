@@ -45,11 +45,18 @@ function emailsMatch(a, b) {
             .toLowerCase();
 }
 
-function preventIosEnterSubmit(event) {
-    if (event.key !== 'Enter') return;
+function dismissKeyboardOnDone(event) {
+    if (event.key !== 'Enter' && event.key !== 'Go' && event.key !== 'Done') return;
     const tag = String(event.target?.tagName || '').toUpperCase();
     if (tag === 'TEXTAREA' || tag === 'BUTTON') return;
     event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.target?.blur === 'function') {
+        event.target.blur();
+    }
+    if (typeof document !== 'undefined' && document.activeElement?.blur) {
+        document.activeElement.blur();
+    }
 }
 
 export default function StartTransaction() {
@@ -184,7 +191,7 @@ export default function StartTransaction() {
                                 name="StartTransactionV3"
                                 data-tracking-section="StartTransactionV3"
                                 onSubmit={onSubmit}
-                                onKeyDown={preventIosEnterSubmit}
+                                onKeyDown={dismissKeyboardOnDone}
                             >
                                 <div>
                                     <div className="createTransaction-title">Start Transaction</div>

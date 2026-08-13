@@ -22,6 +22,11 @@ export default function PhoneField({ value, onChange }) {
                     inputMode: 'tel',
                     onFocus: () => setFocused(true),
                     onBlur: () => setFocused(false),
+                    onKeyDown: (event) => {
+                        if (event.key !== 'Enter') return;
+                        event.preventDefault();
+                        event.currentTarget.blur();
+                    },
                 }}
             />
         </div>
