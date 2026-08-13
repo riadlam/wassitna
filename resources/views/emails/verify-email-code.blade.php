@@ -27,7 +27,7 @@
                                 Confirm your email
                             </p>
                             <p style="margin:0 0 18px;font-size:15px;line-height:1.55;color:#334155;">
-                                Hi{{ $name ? ' '.$name : '' }}, use this code to finish creating your {{ $brandName }} account for
+                                Hi{{ $greetingName }}, use this code to finish creating your {{ $brandName }} account for
                                 <strong style="color:{{ $brandDark }};">{{ $email }}</strong>.
                             </p>
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 18px;">

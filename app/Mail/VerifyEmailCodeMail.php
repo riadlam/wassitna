@@ -33,6 +33,9 @@ class VerifyEmailCodeMail extends Mailable
             text: 'emails.verify-email-code-text',
             with: [
                 'name' => $this->user->name,
+                'greetingName' => trim((string) $this->user->name) !== ''
+                    ? ' '.trim((string) $this->user->name)
+                    : '',
                 'email' => $this->user->email,
                 'code' => $this->code,
                 'minutes' => EmailVerificationService::CODE_TTL_MINUTES,

@@ -6,17 +6,24 @@ import AuthField from '../components/AuthField';
 import { brand } from '../brand';
 import { useAuth } from '../context/AuthContext';
 
+const RESEND_COOLDOWN_SECONDS = 60;
+
+function cooldownFromPayload(payload, fallback = 0) {
+    const value = Number(payload?.resend_available_in);
+    return Number.isFinite(value) && value > 0 ? Math.ceil(value) : fallback;
+}
+
 export default function VerifyEmail() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, ready, setUser, logout, refreshUser } = useAuth();
+    const { user, ready, setUser, logout } = useAuth();
     const next = location.state?.from || '/transactions';
     const [digits, setDigits] = useState(['', '', '', '', '', '']);
     const [error, setError] = useState(null);
     const [info, setInfo] = useState('');
     const [busy, setBusy] = useState(false);
     const [resendBusy, setResendBusy] = useState(false);
-    const [cooldown, setCooldown] = useState(0);
+    const [cooldown, setCooldown] = useState(() => cooldownFromPayload(location.state, 0));
     const inputsRef = useRef([]);
 
     const code = useMemo(() => digits.join(''), [digits]);
@@ -26,6 +33,22 @@ export default function VerifyEmail() {
         const timer = setTimeout(() => setCooldown((value) => value - 1), 1000);
         return () => clearTimeout(timer);
     }, [cooldown]);
+
+    useEffect(() => {
+        if (!user || user.email_verified) return undefined;
+
+        let cancelled = false;
+        api('/api/auth/user')
+            .then((data) => {
+                if (cancelled) return;
+                setCooldown(cooldownFromPayload(data, 0));
+            })
+            .catch(() => {});
+
+        return () => {
+            cancelled = true;
+        };
+    }, [user]);
 
     if (!ready) {
         return null;
@@ -91,12 +114,14 @@ export default function VerifyEmail() {
         setError(null);
         setInfo('');
         setResendBusy(true);
+        setCooldown(RESEND_COOLDOWN_SECONDS);
         try {
-            await api('/api/auth/email/resend', { method: 'POST' });
-            setInfo('A new code was sent to your email.');
-            setCooldown(60);
-            await refreshUser();
+            const data = await api('/api/auth/email/resend', { method: 'POST' });
+            setInfo(data.message || 'A new code was sent to your email.');
+            setCooldown(cooldownFromPayload(data, RESEND_COOLDOWN_SECONDS));
         } catch (err) {
+            const wait = cooldownFromPayload(err.payload, RESEND_COOLDOWN_SECONDS);
+            setCooldown(wait);
             setError(err);
         } finally {
             setResendBusy(false);

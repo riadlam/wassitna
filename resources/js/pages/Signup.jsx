@@ -38,8 +38,14 @@ export default function Signup() {
         setError(null);
         setBusy(true);
         try {
-            await register({ email, phone, password });
-            navigate('/verify-email', { replace: true, state: { from: next } });
+            const data = await register({ email, phone, password });
+            navigate('/verify-email', {
+                replace: true,
+                state: {
+                    from: next,
+                    resend_available_in: data.resend_available_in ?? 60,
+                },
+            });
         } catch (err) {
             setError(err);
         } finally {

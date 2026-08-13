@@ -34,7 +34,40 @@ class EmailVerificationService
         Mail::to($user->email)->send(new VerifyEmailCodeMail($user, $plain));
     }
 
-    public function resend(User $user): void
+    public function remainingCooldown(User $user): int
+    {
+        $latest = EmailVerificationCode::query()
+            ->where('user_id', $user->id)
+            ->latest('sent_at')
+            ->first();
+
+        if (! $latest?->sent_at) {
+            return 0;
+        }
+
+        $availableAt = $latest->sent_at->copy()->addSeconds(self::RESEND_COOLDOWN_SECONDS);
+
+        if ($availableAt->lte(now())) {
+            return 0;
+        }
+
+        $remaining = $availableAt->getTimestamp() - now()->getTimestamp();
+
+        return $remaining > 0 ? $remaining : 0;
+    }
+
+    public function assertCanResend(User $user): void
+    {
+        $wait = $this->remainingCooldown($user);
+
+        if ($wait > 0) {
+            throw ValidationException::withMessages([
+                'code' => ["Please wait {$wait} seconds before requesting another code."],
+            ]);
+        }
+    }
+
+    public function resend(User $user): int
     {
         if ($user->hasVerifiedEmail()) {
             throw ValidationException::withMessages([
@@ -42,20 +75,10 @@ class EmailVerificationService
             ]);
         }
 
-        $latest = EmailVerificationCode::query()
-            ->where('user_id', $user->id)
-            ->latest('sent_at')
-            ->first();
-
-        if ($latest && $latest->sent_at->gt(now()->subSeconds(self::RESEND_COOLDOWN_SECONDS))) {
-            $elapsed = (int) $latest->sent_at->diffInSeconds(now());
-            $wait = max(1, self::RESEND_COOLDOWN_SECONDS - $elapsed);
-            throw ValidationException::withMessages([
-                'code' => ["Please wait {$wait} seconds before requesting another code."],
-            ]);
-        }
-
+        $this->assertCanResend($user);
         $this->issue($user);
+
+        return self::RESEND_COOLDOWN_SECONDS;
     }
 
     public function verify(User $user, string $code): void

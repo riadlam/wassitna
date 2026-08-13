@@ -46,6 +46,7 @@ class AuthController extends Controller
                 'token' => $user->createToken($data['device'] ?? 'spa')->plainTextToken,
                 'token_type' => 'Bearer',
                 'requires_email_verification' => true,
+                'resend_available_in' => 0,
                 'user' => new UserResource($user),
             ], 201);
         }
@@ -57,6 +58,7 @@ class AuthController extends Controller
             'token' => $token,
             'token_type' => 'Bearer',
             'requires_email_verification' => true,
+            'resend_available_in' => EmailVerificationService::RESEND_COOLDOWN_SECONDS,
             'user' => new UserResource($user),
         ], 201);
     }
@@ -83,6 +85,9 @@ class AuthController extends Controller
             'token' => $token,
             'token_type' => 'Bearer',
             'requires_email_verification' => ! $user->hasVerifiedEmail(),
+            'resend_available_in' => $user->hasVerifiedEmail()
+                ? 0
+                : $this->emailVerification->remainingCooldown($user),
             'user' => new UserResource($user),
         ]);
     }
@@ -98,9 +103,14 @@ class AuthController extends Controller
 
     public function user(Request $request): JsonResponse
     {
+        $user = $request->user();
+
         return response()->json([
-            'user' => new UserResource($request->user()),
-            'requires_email_verification' => ! $request->user()->hasVerifiedEmail(),
+            'user' => new UserResource($user),
+            'requires_email_verification' => ! $user->hasVerifiedEmail(),
+            'resend_available_in' => $user->hasVerifiedEmail()
+                ? 0
+                : $this->emailVerification->remainingCooldown($user),
         ]);
     }
 
@@ -112,16 +122,41 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Email verified.',
             'requires_email_verification' => false,
+            'resend_available_in' => 0,
             'user' => new UserResource($user->fresh()),
         ]);
     }
 
     public function resendVerification(Request $request): JsonResponse
     {
-        $this->emailVerification->resend($request->user());
+        $user = $request->user();
+        $wait = $this->emailVerification->remainingCooldown($user);
+
+        if ($wait > 0) {
+            return response()->json([
+                'message' => "Please wait {$wait} seconds before requesting another code.",
+                'errors' => [
+                    'code' => ["Please wait {$wait} seconds before requesting another code."],
+                ],
+                'resend_available_in' => $wait,
+            ], 429);
+        }
+
+        try {
+            $cooldown = $this->emailVerification->resend($user);
+        } catch (ValidationException $e) {
+            $wait = $this->emailVerification->remainingCooldown($user);
+
+            return response()->json([
+                'message' => collect($e->errors())->flatten()->first() ?: 'Could not resend code.',
+                'errors' => $e->errors(),
+                'resend_available_in' => $wait,
+            ], $wait > 0 ? 429 : 422);
+        }
 
         return response()->json([
             'message' => 'A new verification code was sent to your email.',
+            'resend_available_in' => $cooldown,
         ]);
     }
 

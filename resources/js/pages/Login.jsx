@@ -23,7 +23,13 @@ export default function Login() {
         try {
             const data = await login({ login: identifier, password });
             if (data?.user && !data.user.email_verified) {
-                navigate('/verify-email', { replace: true, state: { from: next } });
+                navigate('/verify-email', {
+                    replace: true,
+                    state: {
+                        from: next,
+                        resend_available_in: data.resend_available_in ?? 0,
+                    },
+                });
             } else {
                 navigate(next, { replace: true });
             }
