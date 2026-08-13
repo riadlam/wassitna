@@ -11,8 +11,7 @@ import {
     UpsellPhysical,
     UpsellServices,
 } from '../components/HeroUpsellIcons';
-import { api } from '../api';
-import { calculateEscrowFee, formatMoney } from '../fees';
+import { saveStartTxDraft } from '../startTxDraft';
 import useCategories from '../hooks/useCategories';
 
 const CHECK_ICON = (
@@ -220,29 +219,14 @@ function HeroCarousel() {
     );
 }
 
-function mapFeeResult(payload) {
-    return {
-        amount: Number(payload.amount || 0),
-        fee: Number(payload.fee || 0),
-        cappedAmount: Number(payload.capped_amount ?? payload.cappedAmount ?? 0),
-        overCap: Boolean(payload.over_cap ?? payload.overCap),
-        rate: Number(payload.rate || 0),
-        rateLabel: payload.rate_label || payload.rateLabel || 'Free',
-        tier: payload.tier || 'empty',
-    };
-}
-
 function HeroCalculator() {
     const navigate = useNavigate();
     const { categories } = useCategories();
     const [role, setRole] = useState('seller');
     const [category, setCategory] = useState('');
     const [price, setPrice] = useState('50000');
-    const [showFee, setShowFee] = useState(false);
-    const [busy, setBusy] = useState(false);
     const [categoryOpen, setCategoryOpen] = useState(false);
     const categoryRef = useRef(null);
-    const [feeResult, setFeeResult] = useState(() => calculateEscrowFee('50000'));
 
     const selectedCategory = categories.find((item) => item.slug === category);
 
@@ -266,41 +250,24 @@ function HeroCalculator() {
         };
     }, [categoryOpen]);
 
-    const onCalculate = async (e) => {
+    const onStartTransaction = (e) => {
         e?.preventDefault?.();
-        setBusy(true);
-        try {
-            const payload = await api('/api/fees/calculate', {
-                method: 'POST',
-                body: { amount: Number(price) || 0 },
-            });
-            setFeeResult(mapFeeResult(payload));
-            setShowFee(true);
-        } catch {
-            const fallback = calculateEscrowFee(price);
-            setFeeResult(fallback);
-            setShowFee(true);
-        } finally {
-            setBusy(false);
-        }
-    };
-
-    const onGetStarted = () => {
-        navigate('/transactions/start', {
-            state: {
-                role,
-                category,
-                price: String(feeResult.cappedAmount || price),
-                currency: 'DZD',
-            },
-        });
+        const draft = {
+            role,
+            category,
+            price: String(price || '0'),
+            currency: 'DZD',
+            what: selectedCategory?.name || '',
+        };
+        saveStartTxDraft(draft);
+        navigate('/transactions/start', { state: draft });
     };
 
     return (
         <div className="calculator">
             <form
                 className="calculator-form defaultForm defaultForm--compact defaultForm--large defaultForm--light"
-                onSubmit={onCalculate}
+                onSubmit={onStartTransaction}
                 noValidate
             >
                 <div className="defaultForm-group">
@@ -394,10 +361,7 @@ function HeroCalculator() {
                                 min="0"
                                 max="200000"
                                 value={price}
-                                onChange={(e) => {
-                                    setPrice(e.target.value);
-                                    setShowFee(false);
-                                }}
+                                onChange={(e) => setPrice(e.target.value)}
                                 autoComplete="off"
                             />
                         </div>
@@ -422,22 +386,12 @@ function HeroCalculator() {
                 </div>
             </form>
             <footer className="calculator-footer">
-                {showFee ? (
-                    <p className="calculator-fee">
-                        Wassitna fee ({feeResult.rateLabel}):{' '}
-                        <span className="calculator-fee-value">{formatMoney(feeResult.fee, 'DZD')}</span>
-                        {feeResult.overCap ? (
-                            <span className="calculator-fee-cap"> · Fees shown before you start</span>
-                        ) : null}
-                    </p>
-                ) : null}
                 <button
                     type="button"
                     className="btn btn--secondary btn--large calculator-cta"
-                    disabled={busy}
-                    onClick={showFee ? onGetStarted : onCalculate}
+                    onClick={onStartTransaction}
                 >
-                    {busy ? 'Calculating…' : showFee ? 'Get started now' : 'Calculate fee'}
+                    Start transaction
                 </button>
             </footer>
         </div>

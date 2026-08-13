@@ -6,6 +6,7 @@ import PhoneField from '../components/PhoneField';
 import { api, firstError } from '../api';
 import { applyFeePayer, calculateEscrowFee, feeScheduleCopy, formatMoney } from '../fees';
 import useCategories, { categoryLabel } from '../hooks/useCategories';
+import { clearStartTxDraft, readStartTxDraft } from '../startTxDraft';
 
 const roles = [
     { value: 'buyer', label: 'Buyer' },
@@ -35,10 +36,15 @@ function mapIncomingRole(role) {
     return 'seller';
 }
 
+function mergeIncoming(locationState) {
+    const draft = readStartTxDraft();
+    return { ...draft, ...(locationState || {}) };
+}
+
 export default function StartTransaction() {
     const location = useLocation();
     const navigate = useNavigate();
-    const incoming = location.state || {};
+    const incoming = mergeIncoming(location.state);
     const { categories } = useCategories();
 
     const [title, setTitle] = useState(incoming.what || '');
@@ -132,6 +138,7 @@ export default function StartTransaction() {
                     })),
                 },
             });
+            clearStartTxDraft();
             const ulid = created?.data?.ulid || created?.data?.id;
             navigate(ulid ? `/transaction/${ulid}` : '/transactions');
         } catch (error) {
