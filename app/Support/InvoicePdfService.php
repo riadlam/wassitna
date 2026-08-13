@@ -5,8 +5,12 @@ namespace App\Support;
 use App\Models\Category;
 use App\Models\Transaction;
 use App\Models\TransactionParty;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
 
 class InvoicePdfService
@@ -16,13 +20,26 @@ class InvoicePdfService
         $transaction->loadMissing(['items', 'parties.user']);
 
         $filename = 'wassitna-invoice-'.$transaction->ulid.'.pdf';
+        $html = View::make('invoices.transaction', $this->viewData($transaction))->render();
 
-        return Pdf::loadView('invoices.transaction', $this->viewData($transaction))
-            ->setPaper('a4')
-            ->setOption('isHtml5ParserEnabled', true)
-            ->setOption('isRemoteEnabled', false)
-            ->setOption('defaultFont', 'DejaVu Sans')
-            ->download($filename);
+        $options = new Options;
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', false);
+        $options->set('defaultFont', 'DejaVu Sans');
+        $options->setChroot(base_path());
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('a4');
+        $dompdf->setBasePath(public_path());
+        $dompdf->render();
+
+        $fallback = str_replace('%', '', Str::ascii($filename));
+
+        return new Response($dompdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => HeaderUtils::makeDisposition('attachment', $filename, $fallback),
+        ]);
     }
 
     /**
