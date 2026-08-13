@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { api, fieldError, firstError } from '../api';
+import { api, fieldError } from '../api';
 import AuthAlert from '../components/AuthAlert';
 import AuthField from '../components/AuthField';
 import { brand } from '../brand';
@@ -65,7 +65,10 @@ export default function VerifyEmail() {
         setError(null);
         setInfo('');
         if (code.length !== 6) {
-            setError({ message: 'Enter the 6-digit code from your email.' });
+            setError({
+                message: 'Enter the 6-digit code from your email.',
+                errors: { code: ['Enter the 6-digit code from your email.'] },
+            });
             return;
         }
         setBusy(true);
@@ -125,7 +128,7 @@ export default function VerifyEmail() {
                             id="verify-code-0"
                             label="Verification code"
                             required
-                            error={fieldError(error?.errors, 'code') || firstError(error?.errors)}
+                            error={fieldError(error?.errors, 'code')}
                         >
                             <div className="verifyEmail-code" onPaste={onPaste}>
                                 {digits.map((digit, index) => (
