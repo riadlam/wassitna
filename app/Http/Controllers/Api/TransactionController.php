@@ -105,7 +105,16 @@ class TransactionController extends Controller
 
             $this->createParties($transaction, $user, $data);
 
-            return $transaction->load(['items', 'parties.user', 'creator']);
+            $fresh = $transaction->fresh(['parties']);
+            // Only the buyer must agree. If the creator is the buyer, payment can start immediately.
+            if ($this->buyerHasAccepted($fresh)) {
+                $fresh->update([
+                    'status' => 'awaiting_payment',
+                    'terms_accepted_at' => now(),
+                ]);
+            }
+
+            return $fresh->fresh(['items', 'parties.user', 'creator']);
         });
 
         $this->dealMail->sendTransactionOpened($transaction);
@@ -137,13 +146,17 @@ class TransactionController extends Controller
         }
 
         DB::transaction(function () use ($transaction, $party, $user): void {
+            if ($party->role !== 'buyer') {
+                abort(403, 'Only the buyer confirms the agreement.');
+            }
+
             $party->update([
                 'user_id' => $user->id,
                 'invite_status' => 'accepted',
             ]);
 
             $fresh = $transaction->fresh(['parties']);
-            if ($this->buyerAndSellerAccepted($fresh)) {
+            if ($this->buyerHasAccepted($fresh)) {
                 $fresh->update([
                     'status' => 'awaiting_payment',
                     'terms_accepted_at' => now(),
@@ -257,7 +270,7 @@ class TransactionController extends Controller
             'user_id' => $user->id,
             'email' => $user->email,
             'phone' => $user->phone,
-            'invite_status' => 'pending',
+            'invite_status' => 'accepted',
         ]);
 
         if ($role === 'broker') {
@@ -275,7 +288,7 @@ class TransactionController extends Controller
                 'user_id' => $this->findUserIdByEmail($partyEmail),
                 'email' => $partyEmail,
                 'phone' => $partyPhone,
-                'invite_status' => 'pending',
+                'invite_status' => 'accepted',
             ]);
 
             return;
@@ -287,7 +300,8 @@ class TransactionController extends Controller
             'user_id' => $this->findUserIdByEmail($partyEmail),
             'email' => $partyEmail,
             'phone' => $partyPhone,
-            'invite_status' => 'pending',
+            // Seller never has to confirm agreement; only the buyer does.
+            'invite_status' => $counterRole === 'seller' ? 'accepted' : 'pending',
         ]);
     }
 
@@ -296,17 +310,15 @@ class TransactionController extends Controller
         return User::query()->where('email', strtolower($email))->value('id');
     }
 
-    private function buyerAndSellerAccepted(Transaction $transaction): bool
+    private function buyerHasAccepted(Transaction $transaction): bool
     {
         $parties = $transaction->relationLoaded('parties')
             ? $transaction->parties
             : $transaction->parties()->get();
 
         $buyer = $parties->firstWhere('role', 'buyer');
-        $seller = $parties->firstWhere('role', 'seller');
 
-        return $buyer?->invite_status === 'accepted'
-            && $seller?->invite_status === 'accepted';
+        return $buyer?->invite_status === 'accepted';
     }
 
     private function claimParty(Transaction $transaction, User $user): void

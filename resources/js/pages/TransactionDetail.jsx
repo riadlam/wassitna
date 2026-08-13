@@ -509,32 +509,31 @@ export default function TransactionDetail() {
 
                                     {tx.status === 'pending_acceptance' && view?.canAccept ? (
                                         <div className="txNextStep" role="status">
-                                            <p className="txNextStep-title">
-                                                {view.myRole === 'buyer'
-                                                    ? 'Confirm as the buyer'
-                                                    : 'Confirm as the seller'}
-                                            </p>
+                                            <p className="txNextStep-title">Confirm as the buyer</p>
                                             <p className="txNextStep-text">
-                                                Both the buyer and the seller must agree before payment. Review the
-                                                terms, then confirm your side.
+                                                Review the terms and confirm. Once you agree, payment (step 2) starts.
                                             </p>
                                         </div>
                                     ) : null}
 
-                                    {tx.status === 'pending_acceptance' && view?.iAccepted ? (
+                                    {tx.status === 'pending_acceptance' && view?.myRole === 'seller' ? (
                                         <div className="txNextStep" role="status">
-                                            <p className="txNextStep-title">
-                                                Waiting for the {waitingOn} to agree
-                                            </p>
+                                            <p className="txNextStep-title">Waiting for the buyer to agree</p>
                                             <p className="txNextStep-text">
-                                                You confirmed as the {view.myRole}. Payment unlocks only after the{' '}
-                                                {waitingOn} confirms too
-                                                {waitingParty?.email ? (
+                                                You do not need to confirm the agreement. Payment unlocks after the buyer
+                                                agrees
+                                                {view?.waitingParty?.email || partyByRole(tx?.parties, 'buyer')?.email ? (
                                                     <>
                                                         {' '}
                                                         (
-                                                        <a href={`mailto:${waitingParty.email}`}>
-                                                            {waitingParty.email}
+                                                        <a
+                                                            href={`mailto:${
+                                                                view?.waitingParty?.email ||
+                                                                partyByRole(tx?.parties, 'buyer')?.email
+                                                            }`}
+                                                        >
+                                                            {view?.waitingParty?.email ||
+                                                                partyByRole(tx?.parties, 'buyer')?.email}
                                                         </a>
                                                         )
                                                     </>
@@ -548,7 +547,7 @@ export default function TransactionDetail() {
                                         <div className="txNextStep" role="status">
                                             <p className="txNextStep-title">Your turn to pay</p>
                                             <p className="txNextStep-text">
-                                                Both sides agreed. Fund the escrow so the seller can deliver.
+                                                Agreement is done. Fund the escrow so the seller can deliver.
                                             </p>
                                         </div>
                                     ) : null}
@@ -557,7 +556,7 @@ export default function TransactionDetail() {
                                         <div className="txNextStep" role="status">
                                             <p className="txNextStep-title">Waiting for the buyer to pay</p>
                                             <p className="txNextStep-text">
-                                                Both sides agreed. You deliver after the buyer funds this deal.
+                                                The buyer agreed. You deliver after they fund this deal.
                                             </p>
                                         </div>
                                     ) : null}
@@ -751,15 +750,10 @@ export default function TransactionDetail() {
 
                                     {view?.canAccept ? (
                                         <div className="txActionPanel">
-                                            <p className="txActionPanel-title">
-                                                {view.myRole === 'buyer'
-                                                    ? 'Confirm as buyer'
-                                                    : 'Confirm as seller'}
-                                            </p>
+                                            <p className="txActionPanel-title">Confirm as buyer</p>
                                             <p className="txActionPanel-text">
-                                                {view.myRole === 'buyer'
-                                                    ? 'You agree to the price, inspection period, and to pay Wassitna before delivery. The deal moves to payment only after the seller confirms too.'
-                                                    : 'You agree to deliver as described after the buyer pays. The deal moves to payment only after the buyer confirms too.'}
+                                                You agree to the price, inspection period, and to pay Wassitna before
+                                                delivery. After you confirm, the deal moves to payment.
                                             </p>
                                             {actionError ? (
                                                 <p className="txActionPanel-error" role="alert">
@@ -777,12 +771,12 @@ export default function TransactionDetail() {
                                         </div>
                                     ) : null}
 
-                                    {tx.status === 'pending_acceptance' && view?.iAccepted ? (
+                                    {tx.status === 'pending_acceptance' && view?.myRole === 'seller' ? (
                                         <div className="txActionPanel txActionPanel--quiet">
-                                            <p className="txActionPanel-title">You already confirmed</p>
+                                            <p className="txActionPanel-title">Waiting on the buyer</p>
                                             <p className="txActionPanel-text">
-                                                Waiting for the {waitingOn} to confirm. Step 1 stays here until both
-                                                sides agree.
+                                                Sellers do not confirm the agreement. Step 2 (payment) starts when the
+                                                buyer agrees.
                                             </p>
                                         </div>
                                     ) : null}

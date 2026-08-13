@@ -41,7 +41,7 @@ class TransactionPolicy
             return false;
         }
 
-        return in_array($party->role, ['buyer', 'seller'], true);
+        return $party?->role === 'buyer';
     }
 
     public function pay(User $user, Transaction $transaction): bool

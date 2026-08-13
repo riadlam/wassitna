@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
+import { dismissIosKeyboard } from '../iosKeyboard';
 
-
-export default function PhoneField({ value, onChange }) {
+export default function PhoneField({ value, onChange, error = false, helperText }) {
     const [focused, setFocused] = useState(false);
 
     return (
-        <div className={`phoneField${focused ? ' is-focused' : ''}`}>
+        <div className={`phoneField${focused ? ' is-focused' : ''}${error ? ' is-error' : ''}`}>
             <label className="phoneField-label">Phone</label>
             <PhoneInput
                 defaultCountry="dz"
@@ -20,15 +20,19 @@ export default function PhoneField({ value, onChange }) {
                     autoComplete: 'tel',
                     enterKeyHint: 'done',
                     inputMode: 'tel',
+                    'aria-invalid': error || undefined,
                     onFocus: () => setFocused(true),
                     onBlur: () => setFocused(false),
                     onKeyDown: (event) => {
                         if (event.key !== 'Enter') return;
                         event.preventDefault();
-                        event.currentTarget.blur();
+                        dismissIosKeyboard();
                     },
                 }}
             />
+            {helperText ? (
+                <p className={`MuiFormHelperText-root${error ? ' Mui-error' : ''}`}>{helperText}</p>
+            ) : null}
         </div>
     );
 }

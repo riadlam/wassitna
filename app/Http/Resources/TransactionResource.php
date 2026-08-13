@@ -62,12 +62,8 @@ class TransactionResource extends JsonResource
         $sellerAccepted = $seller?->invite_status === 'accepted';
 
         $waitingOn = null;
-        if ($this->status === 'pending_acceptance') {
-            if (! $buyerAccepted) {
-                $waitingOn = 'buyer';
-            } elseif (! $sellerAccepted) {
-                $waitingOn = 'seller';
-            }
+        if ($this->status === 'pending_acceptance' && ! $buyerAccepted) {
+            $waitingOn = 'buyer';
         }
 
         return [
@@ -78,9 +74,9 @@ class TransactionResource extends JsonResource
             'seller_accepted' => $sellerAccepted,
             'waiting_on' => $waitingOn,
             'can_accept' => $party !== null
+                && $party->role === 'buyer'
                 && $this->status === 'pending_acceptance'
-                && $party->invite_status !== 'accepted'
-                && in_array($party->role, ['buyer', 'seller'], true),
+                && $party->invite_status !== 'accepted',
             'can_pay' => $party?->role === 'buyer' && $this->status === 'awaiting_payment',
             'can_deliver' => $party?->role === 'seller' && $this->status === 'awaiting_delivery',
             'can_confirm_delivery' => $party?->role === 'buyer' && $this->status === 'awaiting_delivery',

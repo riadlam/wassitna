@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { dismissIosKeyboard } from '../iosKeyboard';
 
 export default function OutlinedField({
     label,
@@ -183,7 +184,7 @@ export default function OutlinedField({
                         onKeyDown={(event) => {
                             if (event.key !== 'Enter') return;
                             event.preventDefault();
-                            event.currentTarget.blur();
+                            dismissIosKeyboard();
                         }}
                         onBlur={(event) => {
                             setFocused(false);

@@ -634,6 +634,34 @@
     background: #f5f7f9;
 }
 
+.iosKeyboardDoneBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-height: 44px;
+    padding: 6px 12px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    background: #d6d8dd;
+    border-top: 1px solid #b4b7bd;
+}
+
+.iosKeyboardDoneBar-button {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: #007aff;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
 .startTransactionPage .MuiDivider-root {
     border: 0;
     height: 1px;
@@ -1512,6 +1540,15 @@
 .startTransactionPage .phoneField.is-focused .react-international-phone-input-container {
     border-width: 2px;
     border-color: #01426a;
+}
+
+.startTransactionPage .phoneField.is-error .react-international-phone-input-container {
+    border-width: 2px;
+    border-color: #d32f2f;
+}
+
+.startTransactionPage .phoneField.is-error .phoneField-label {
+    color: #d32f2f;
 }
 
 .startTransactionPage .phoneField .react-international-phone-country-selector-button,

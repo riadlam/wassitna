@@ -8,6 +8,8 @@ import { applyFeePayer, calculateEscrowFee, feeScheduleCopy, formatMoney } from 
 import useCategories, { categoryLabel } from '../hooks/useCategories';
 import { useAuth } from '../context/AuthContext';
 import { clearStartTxDraft, readStartTxDraft } from '../startTxDraft';
+import IosKeyboardDoneBar from '../components/IosKeyboardDoneBar';
+import { dismissIosKeyboard } from '../iosKeyboard';
 
 const roles = [
     { value: 'buyer', label: 'Buyer' },
@@ -37,26 +39,33 @@ function mergeIncoming(locationState) {
 }
 
 function emailsMatch(a, b) {
-    return String(a || '')
-        .trim()
-        .toLowerCase() ===
+    return (
+        String(a || '')
+            .trim()
+            .toLowerCase() ===
         String(b || '')
             .trim()
-            .toLowerCase();
+            .toLowerCase()
+    );
+}
+
+function phoneDigits(phone) {
+    return String(phone || '').replace(/\D+/g, '');
+}
+
+function phonesMatch(a, b) {
+    const left = phoneDigits(a);
+    const right = phoneDigits(b);
+    if (!left || !right || left.length < 8 || right.length < 8) return false;
+    return left === right || left.endsWith(right) || right.endsWith(left);
 }
 
 function dismissKeyboardOnDone(event) {
-    if (event.key !== 'Enter' && event.key !== 'Go' && event.key !== 'Done') return;
+    if (event.key !== 'Enter') return;
     const tag = String(event.target?.tagName || '').toUpperCase();
     if (tag === 'TEXTAREA' || tag === 'BUTTON') return;
     event.preventDefault();
-    event.stopPropagation();
-    if (typeof event.target?.blur === 'function') {
-        event.target.blur();
-    }
-    if (typeof document !== 'undefined' && document.activeElement?.blur) {
-        document.activeElement.blur();
-    }
+    dismissIosKeyboard();
 }
 
 export default function StartTransaction() {
@@ -85,6 +94,7 @@ export default function StartTransaction() {
     const feePayer = 'buyer';
     const titleError = titleTouched && !title.trim();
     const partyEmailSameAsUser = Boolean(user?.email && partyEmail.includes('@') && emailsMatch(partyEmail, user.email));
+    const partyPhoneSameAsUser = Boolean(user?.phone && phonesMatch(partyPhone, user.phone));
     const canAddItem = Boolean(category && itemName.trim() && Number(price) > 0);
     const hasItems = items.length > 0;
     const days = Math.max(1, Number(inspectionPeriod) || 1);
@@ -98,7 +108,8 @@ export default function StartTransaction() {
         title.trim() &&
         agreeTerms &&
         partyEmail.includes('@') &&
-        !partyEmailSameAsUser;
+        !partyEmailSameAsUser &&
+        !partyPhoneSameAsUser;
 
     const categoryOptions = useMemo(
         () => categories.map((item) => ({ value: item.slug, label: item.name })),
@@ -144,6 +155,10 @@ export default function StartTransaction() {
             setSubmitError('Use a different email — you cannot invite yourself.');
             return;
         }
+        if (partyPhoneSameAsUser) {
+            setSubmitError('Use a different phone number — you cannot invite yourself.');
+            return;
+        }
         setSubmitting(true);
         setSubmitError('');
         try {
@@ -183,6 +198,7 @@ export default function StartTransaction() {
     return (
         <section className="content startTransactionPage">
             <HeaderV3Simplified />
+            <IosKeyboardDoneBar />
             <main>
                 <div data-container="spa" id="spa">
                     <div className="createTransaction section--mid">
@@ -225,7 +241,6 @@ export default function StartTransaction() {
                                                 name="inspectionPeriod"
                                                 type="text"
                                                 inputMode="numeric"
-                                                pattern="[0-9]*"
                                                 enterKeyHint="done"
                                                 value={inspectionPeriod}
                                                 helperText=""
@@ -436,7 +451,16 @@ export default function StartTransaction() {
                                                     />
                                                 </div>
                                                 <div className="createTransaction-inline-field--half">
-                                                    <PhoneField value={partyPhone} onChange={setPartyPhone} />
+                                                    <PhoneField
+                                                        value={partyPhone}
+                                                        onChange={setPartyPhone}
+                                                        error={partyPhoneSameAsUser}
+                                                        helperText={
+                                                            partyPhoneSameAsUser
+                                                                ? 'Use a different phone number — you cannot invite yourself.'
+                                                                : undefined
+                                                        }
+                                                    />
                                                 </div>
                                             </div>
                                         </div>

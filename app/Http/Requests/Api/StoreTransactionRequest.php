@@ -40,13 +40,24 @@ class StoreTransactionRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
+            $user = $this->user();
             $partyEmail = strtolower(trim((string) $this->input('party_email', '')));
-            $userEmail = strtolower(trim((string) $this->user()?->email));
+            $userEmail = strtolower(trim((string) $user?->email));
 
             if ($partyEmail !== '' && $userEmail !== '' && $partyEmail === $userEmail) {
                 $validator->errors()->add(
                     'party_email',
                     'Use a different email — you cannot invite yourself.'
+                );
+            }
+
+            $partyPhone = (string) $this->input('party_phone', '');
+            $userPhone = (string) ($user?->phone_normalized ?: $user?->phone);
+
+            if (PhoneNormalizer::matches($partyPhone, $userPhone)) {
+                $validator->errors()->add(
+                    'party_phone',
+                    'Use a different phone number — you cannot invite yourself.'
                 );
             }
         });
