@@ -12,12 +12,14 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Support\DealMailService;
 use App\Support\FeeCalculator;
+use App\Support\InvoicePdfService;
 use App\Support\PhoneNormalizer;
 use App\Support\WalletService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class TransactionController extends Controller
 {
@@ -131,6 +133,19 @@ class TransactionController extends Controller
         $this->claimParty($transaction, $request->user());
 
         return (new TransactionResource($transaction->fresh(['items', 'parties'])))->response();
+    }
+
+    public function invoice(Request $request, Transaction $transaction, InvoicePdfService $invoices): Response
+    {
+        $transaction->load(['items', 'parties.user']);
+        $this->authorize('view', $transaction);
+        $this->claimParty($transaction, $request->user());
+
+        if ($transaction->status !== 'completed') {
+            abort(422, 'The invoice is available after the transaction is completed.');
+        }
+
+        return $invoices->download($transaction);
     }
 
     public function accept(Request $request, Transaction $transaction): JsonResponse

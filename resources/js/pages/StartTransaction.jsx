@@ -8,8 +8,6 @@ import { applyFeePayer, calculateEscrowFee, feeScheduleCopy, formatMoney } from 
 import useCategories, { categoryLabel } from '../hooks/useCategories';
 import { useAuth } from '../context/AuthContext';
 import { clearStartTxDraft, readStartTxDraft } from '../startTxDraft';
-import IosKeyboardDoneBar from '../components/IosKeyboardDoneBar';
-import { dismissIosKeyboard } from '../iosKeyboard';
 
 const roles = [
     { value: 'buyer', label: 'Buyer' },
@@ -58,14 +56,6 @@ function phonesMatch(a, b) {
     const right = phoneDigits(b);
     if (!left || !right || left.length < 8 || right.length < 8) return false;
     return left === right || left.endsWith(right) || right.endsWith(left);
-}
-
-function dismissKeyboardOnDone(event) {
-    if (event.key !== 'Enter') return;
-    const tag = String(event.target?.tagName || '').toUpperCase();
-    if (tag === 'TEXTAREA' || tag === 'BUTTON') return;
-    event.preventDefault();
-    dismissIosKeyboard();
 }
 
 export default function StartTransaction() {
@@ -198,7 +188,6 @@ export default function StartTransaction() {
     return (
         <section className="content startTransactionPage">
             <HeaderV3Simplified />
-            <IosKeyboardDoneBar />
             <main>
                 <div data-container="spa" id="spa">
                     <div className="createTransaction section--mid">
@@ -207,7 +196,6 @@ export default function StartTransaction() {
                                 name="StartTransactionV3"
                                 data-tracking-section="StartTransactionV3"
                                 onSubmit={onSubmit}
-                                onKeyDown={dismissKeyboardOnDone}
                             >
                                 <div>
                                     <div className="createTransaction-title">Start Transaction</div>

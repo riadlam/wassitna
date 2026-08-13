@@ -76,14 +76,16 @@ function formatHistoryDate(value) {
     if (!value) return '—';
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return '—';
-    return date.toLocaleString('en-GB', {
+    const stamped = date.toLocaleString('en-GB', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-        timeZoneName: 'short',
+        hour12: false,
+        timeZone: 'Africa/Algiers',
     });
+    return `${stamped} (Algeria)`;
 }
 
 function viewerContext(tx, user) {
@@ -143,7 +145,6 @@ export default function TransactionDetail() {
     const [actionError, setActionError] = useState('');
     const [payMethod, setPayMethod] = useState('cib_dahabia');
     const [payNote, setPayNote] = useState('');
-    const [showInvoice, setShowInvoice] = useState(false);
 
     useEffect(() => {
         let cancelled = false;
@@ -520,7 +521,7 @@ export default function TransactionDetail() {
                                         <div className="txNextStep" role="status">
                                             <p className="txNextStep-title">Waiting for the buyer to agree</p>
                                             <p className="txNextStep-text">
-                                                You do not need to confirm the agreement. Payment unlocks after the buyer
+                                               Payment unlocks after the buyer
                                                 agrees
                                                 {view?.waitingParty?.email || partyByRole(tx?.parties, 'buyer')?.email ? (
                                                     <>
@@ -890,19 +891,9 @@ export default function TransactionDetail() {
                                             transactionId={tx.ulid}
                                             sellerProceeds={tx.seller_proceeds}
                                             onSummary={() => {
-                                                setShowInvoice(false);
                                                 document.getElementById('tx-summary')?.scrollIntoView({
                                                     behavior: 'smooth',
                                                     block: 'start',
-                                                });
-                                            }}
-                                            onInvoice={() => {
-                                                setShowInvoice(true);
-                                                window.requestAnimationFrame(() => {
-                                                    document.getElementById('tx-invoice')?.scrollIntoView({
-                                                        behavior: 'smooth',
-                                                        block: 'start',
-                                                    });
                                                 });
                                             }}
                                         />
@@ -972,47 +963,6 @@ export default function TransactionDetail() {
                                     </table>
                                 </div>
 
-                                {showInvoice ? (
-                                    <div className="txDetail-card txInvoice" id="tx-invoice">
-                                        <div className="txDetail-cardHead">
-                                            {docIcon}
-                                            <span>Invoice</span>
-                                        </div>
-                                        <p className="txInvoice-id">#{tx.ulid}</p>
-                                        <p className="txInvoice-line">
-                                            <span>Title</span>
-                                            <strong>{tx.title}</strong>
-                                        </p>
-                                        <p className="txInvoice-line">
-                                            <span>Buyer</span>
-                                            <strong>{buyer?.email || '—'}</strong>
-                                        </p>
-                                        <p className="txInvoice-line">
-                                            <span>Seller</span>
-                                            <strong>{seller?.email || '—'}</strong>
-                                        </p>
-                                        <p className="txInvoice-line">
-                                            <span>Subtotal</span>
-                                            <strong>{formatMoney(tx.subtotal, tx.currency || 'DZD')}</strong>
-                                        </p>
-                                        <p className="txInvoice-line">
-                                            <span>Wassitna fee</span>
-                                            <strong>{formatMoney(tx.fee_amount, tx.currency || 'DZD')}</strong>
-                                        </p>
-                                        <p className="txInvoice-line is-total">
-                                            <span>Total</span>
-                                            <strong>{formatMoney(tx.buyer_total, tx.currency || 'DZD')}</strong>
-                                        </p>
-                                        <button
-                                            type="button"
-                                            className="txActionPanel-btn txActionPanel-btn--ghost"
-                                            onClick={() => window.print()}
-                                        >
-                                            Print
-                                        </button>
-                                    </div>
-                                ) : null}
-
                                 {tx.status === 'completed' || tx.status === 'disputed' ? null : (
                                     <div className="txDetail-cancelWrap">
                                         <button type="button" className="kyc-cancelTransactionButton" disabled>
@@ -1031,8 +981,10 @@ export default function TransactionDetail() {
                                     <ul className="txDetail-history">
                                         {history.map((entry) => (
                                             <li key={`${entry.date}-${entry.note}`}>
-                                                <strong>{entry.date}</strong>
-                                                <p>{entry.note}</p>
+                                                <div className="txDetail-historyBody">
+                                                    <strong>{entry.date}</strong>
+                                                    <p>{entry.note}</p>
+                                                </div>
                                             </li>
                                         ))}
                                     </ul>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api, firstError } from '../api';
+import { api, downloadFile, firstError } from '../api';
 import { useAuth } from '../context/AuthContext';
 import WithdrawModal from './WithdrawModal';
 
@@ -19,14 +19,34 @@ export default function ClosedPanel({
     transactionId,
     sellerProceeds,
     onSummary,
-    onInvoice,
 }) {
     const navigate = useNavigate();
     const { user, setUser } = useAuth();
     const [open, setOpen] = useState(false);
     const [busy, setBusy] = useState(false);
+    const [downloading, setDownloading] = useState(false);
     const [error, setError] = useState('');
     const [done, setDone] = useState(false);
+
+    async function downloadInvoice() {
+        if (downloading || !transactionId) return;
+        setDownloading(true);
+        setError('');
+        try {
+            await downloadFile(
+                `/api/transactions/${encodeURIComponent(transactionId)}/invoice`,
+                `wassitna-invoice-${transactionId}.pdf`,
+            );
+        } catch (err) {
+            if (err.status === 401) {
+                navigate('/login', { replace: true, state: { from: `/transaction/${transactionId}` } });
+                return;
+            }
+            setError(firstError(err.errors, err.message || 'Could not download the invoice.'));
+        } finally {
+            setDownloading(false);
+        }
+    }
 
     async function requestWithdrawal(nextUser = user) {
         if (busy) return;
@@ -67,7 +87,7 @@ export default function ClosedPanel({
             <p className="txActionPanel-text">
                 {isSeller
                     ? 'The buyer approved. Funds are in your wallet. You can withdraw them now.'
-                    : 'The buyer approved. You can still open the summary or invoice below.'}
+                    : 'The buyer approved. You can still open the summary or download the invoice below.'}
             </p>
             {error ? (
                 <p className="txActionPanel-error" role="alert">
@@ -92,8 +112,13 @@ export default function ClosedPanel({
                 <button type="button" className="txActionPanel-btn txActionPanel-btn--ghost" onClick={onSummary}>
                     View transaction summary
                 </button>
-                <button type="button" className="txActionPanel-btn txActionPanel-btn--ghost" onClick={onInvoice}>
-                    View invoice
+                <button
+                    type="button"
+                    className="txActionPanel-btn txActionPanel-btn--ghost"
+                    disabled={downloading}
+                    onClick={downloadInvoice}
+                >
+                    {downloading ? 'Downloading…' : 'Download invoice'}
                 </button>
             </div>
             {isSeller ? (

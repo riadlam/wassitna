@@ -634,34 +634,6 @@
     background: #f5f7f9;
 }
 
-.iosKeyboardDoneBar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 10000;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    min-height: 44px;
-    padding: 6px 12px;
-    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
-    box-sizing: border-box;
-    background: #d6d8dd;
-    border-top: 1px solid #b4b7bd;
-}
-
-.iosKeyboardDoneBar-button {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    color: #007aff;
-    font: inherit;
-    font-size: 16px;
-    font-weight: 600;
-    padding: 8px 10px;
-    cursor: pointer;
-}
-
 .startTransactionPage .MuiDivider-root {
     border: 0;
     height: 1px;
@@ -2809,28 +2781,6 @@
     background: #f7f9fb;
 }
 
-.transactionDetailPage .txInvoice-id {
-    margin: 0 0 14px;
-    color: var(--tx-muted);
-    font-size: 12px;
-}
-
-.transactionDetailPage .txInvoice-line {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin: 0 0 8px;
-    color: var(--tx-body);
-    font-size: 14px;
-}
-
-.transactionDetailPage .txInvoice-line.is-total {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--tx-line);
-    color: var(--tx-ink);
-}
-
 .transactionDetailPage .txPayMethods {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -3137,9 +3087,20 @@
     color: var(--tx-ink);
     font-weight: 700;
     font-size: 16px;
+    line-height: 1.2;
+}
+
+.transactionDetailPage .txDetail-cardHead p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
 }
 
 .transactionDetailPage .txDetail-cardHead .txDetail-icon {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    display: block;
     color: var(--tx-muted);
 }
 
@@ -3230,17 +3191,17 @@
 }
 
 .transactionDetailPage .txDetail-history li {
-    position: relative;
-    padding-left: 16px;
+    display: grid;
+    grid-template-columns: 8px minmax(0, 1fr);
+    column-gap: 12px;
+    align-items: start;
 }
 
 .transactionDetailPage .txDetail-history li::before {
     content: '';
-    position: absolute;
-    left: 0;
-    top: 7px;
     width: 8px;
     height: 8px;
+    margin-top: 5px;
     border-radius: 50%;
     background: var(--tx-green);
     box-shadow: 0 0 0 3px rgba(60, 185, 93, 0.15);
@@ -3250,12 +3211,18 @@
     margin-top: 16px;
 }
 
+.transactionDetailPage .txDetail-historyBody {
+    min-width: 0;
+}
+
 .transactionDetailPage .txDetail-history strong {
     display: block;
-    margin-bottom: 4px;
+    margin: 0 0 4px;
     color: #212121;
     font-size: 13px;
     font-weight: 700;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
 }
 
 .transactionDetailPage .txDetail-history p {
@@ -3362,5 +3329,14 @@
 
     .transactionDetailPage .txSharePanel-copyBtn {
         height: 36px;
+    }
+
+    .transactionDetailPage .txDetail-aside .txDetail-card {
+        padding: 16px;
+    }
+
+    .transactionDetailPage .txDetail-cardHead {
+        gap: 8px;
+        font-size: 15px;
     }
 }

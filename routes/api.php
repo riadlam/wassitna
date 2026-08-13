@@ -35,6 +35,7 @@ Route::middleware(['auth:sanctum', 'verified.email', 'throttle:60,1'])->group(fu
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::post('/transactions', [TransactionController::class, 'store']);
     Route::get('/transactions/{transaction:ulid}', [TransactionController::class, 'show']);
+    Route::get('/transactions/{transaction:ulid}/invoice', [TransactionController::class, 'invoice']);
     Route::post('/transactions/{transaction:ulid}/accept', [TransactionController::class, 'accept']);
     Route::post('/transactions/{transaction:ulid}/pay', [TransactionController::class, 'pay']);
     Route::post('/transactions/{transaction:ulid}/deliver', [TransactionController::class, 'deliver']);

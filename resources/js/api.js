@@ -66,6 +66,37 @@ export function flattenErrors(errors) {
     });
 }
 
+export async function downloadFile(path, filename) {
+    const headers = {
+        Accept: 'application/pdf',
+        'X-Requested-With': 'XMLHttpRequest',
+    };
+
+    const token = getToken();
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await fetch(path, { headers });
+    if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        const error = new Error(payload.message || 'Download failed');
+        error.status = response.status;
+        error.errors = payload.errors || {};
+        throw error;
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
 export function firstError(errors, fallback = 'Please check the form and try again.') {
     const list = flattenErrors(errors);
     return list[0]?.message || fallback;
