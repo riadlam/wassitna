@@ -377,7 +377,7 @@ export default function TransactionDetail() {
     if (loading) {
         return (
             <section className="content transactionDetailPage">
-                <HeaderV3Simplified />
+                <HeaderV3Simplified backTo="/transactions" />
                 <main>
                     <div className="txDetail section--mid">
                         <div className="section-container section--small txDetail-grid" aria-busy="true" aria-label="Loading transaction">
@@ -427,7 +427,7 @@ export default function TransactionDetail() {
     if (!tx) {
         return (
             <section className="content transactionDetailPage">
-                <HeaderV3Simplified />
+                <HeaderV3Simplified backTo="/transactions" />
                 <main>
                     <div className="txDetail-loading">
                         <p>
@@ -444,7 +444,7 @@ export default function TransactionDetail() {
 
     return (
         <section className="content transactionDetailPage">
-            <HeaderV3Simplified />
+            <HeaderV3Simplified backTo="/transactions" />
             <main>
                 <div data-container="spa" id="spa">
                     <div className="txDetail section--mid">

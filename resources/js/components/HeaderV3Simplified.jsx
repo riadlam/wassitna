@@ -18,7 +18,7 @@ const backIcon = (
     </svg>
 );
 
-export default function HeaderV3Simplified() {
+export default function HeaderV3Simplified({ backTo }) {
     const navigate = useNavigate();
 
     return (
@@ -31,6 +31,10 @@ export default function HeaderV3Simplified() {
                                 type="button"
                                 className="headerV3-menuBtn headerV3-returnUrl"
                                 onClick={() => {
+                                    if (backTo) {
+                                        navigate(backTo);
+                                        return;
+                                    }
                                     if (window.history.length > 1) {
                                         navigate(-1);
                                     } else {

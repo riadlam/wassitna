@@ -184,7 +184,7 @@ export default function StartTransaction() {
             });
             clearStartTxDraft();
             const ulid = created?.data?.ulid || created?.data?.id;
-            navigate(ulid ? `/transaction/${ulid}` : '/transactions');
+            navigate(ulid ? `/transaction/${ulid}` : '/transactions', { replace: true });
         } catch (error) {
             if (error.status === 401) {
                 navigate('/login', { replace: true, state: { from: '/transactions/start' } });
